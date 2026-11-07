@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { shuffleArray } from '../../utils/shuffle';
 import type { WordItem } from '../../types';
 import { speakWord } from '../../services/speech';
@@ -36,15 +36,20 @@ export const QuizGame: React.FC<QuizGameProps> = ({
     const roundCount = Math.min(10, shuffled.length);
 
     const generated: Question[] = shuffled.slice(0, roundCount).map(item => {
-      const wrongPool = valid
-        .filter(w => w.tr !== item.tr)
-        .map(w => w.tr!);
-
-      const allOptions = shuffleArray([...wrongPool, item.tr!]);
+      const correctTr = (item.tr || '').trim();
+      const uniqueWrong = Array.from(
+        new Set(
+          valid
+            .filter(w => (w.tr || '').trim() !== correctTr)
+            .map(w => (w.tr || '').trim())
+        )
+      ).filter(Boolean);
+      const wrongPool = shuffleArray(uniqueWrong).slice(0, 3);
+      const allOptions = shuffleArray([...wrongPool, correctTr]);
       return {
         word: item,
         options: allOptions,
-        correctAnswer: item.tr!,
+        correctAnswer: correctTr,
       };
     });
 
