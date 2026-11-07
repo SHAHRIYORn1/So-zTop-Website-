@@ -6,6 +6,7 @@ import { WordSetEditor } from './components/editor/WordSetEditor';
 import { AchievementsView } from './components/achievements/AchievementsView';
 import { GameContainer } from './components/games/GameContainer';
 import { GameSetupModal } from './components/games/GameSetupModal';
+import { GamesView } from './components/games/GamesView';
 import { PresetLibraryModal } from './components/library/PresetLibraryModal';
 import { PresetLibraryView } from './components/library/PresetLibraryView';
 import { LandingPage } from './components/landing/LandingPage';
@@ -49,7 +50,7 @@ export function App() {
     }
   });
 
-  const [currentView, setCurrentView] = useState<'home' | 'editor' | 'templates' | 'achievements' | 'game' | 'profile'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'editor' | 'games' | 'templates' | 'achievements' | 'game' | 'profile'>('home');
   const [activeGameMode, setActiveGameMode] = useState<GameModeId | null>(null);
   const [setupModeId, setSetupModeId] = useState<GameModeId | '?' | null>(null);
   const [filteredGameWords, setFilteredGameWords] = useState<WordItem[] | null>(null);
@@ -238,6 +239,18 @@ export function App() {
         <main className="flex-1 mt-6">
           {currentView === 'home' && (
             <HomeView
+              activeSet={activeSet}
+              allSets={sets}
+              onSelectSet={setActiveSetId}
+              onStartGame={handleStartGameSetup}
+              onOpenEditor={() => setCurrentView('editor')}
+              onOpenLibrary={() => setCurrentView('templates')}
+              onOpenGames={() => setCurrentView('games')}
+            />
+          )}
+
+          {currentView === 'games' && (
+            <GamesView
               activeSet={activeSet}
               allSets={sets}
               onSelectSet={setActiveSetId}

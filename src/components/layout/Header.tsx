@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sun, Moon, Flame, Star, Sparkles, FolderOpen, Trophy, Volume2, VolumeX, LogOut } from 'lucide-react';
+import { Sun, Moon, Flame, Star, Sparkles, FolderOpen, Trophy, Volume2, VolumeX, LogOut, Gamepad2 } from 'lucide-react';
 import type { UserStats } from '../../types';
 
 interface HeaderProps {
@@ -13,8 +13,8 @@ interface HeaderProps {
   onToggleTheme: () => void;
   soundEnabled: boolean;
   onToggleSound: () => void;
-  currentView: 'home' | 'editor' | 'templates' | 'achievements' | 'game' | 'profile';
-  onNavigate: (view: 'home' | 'editor' | 'templates' | 'achievements' | 'profile') => void;
+  currentView: 'home' | 'editor' | 'games' | 'templates' | 'achievements' | 'game' | 'profile';
+  onNavigate: (view: 'home' | 'editor' | 'games' | 'templates' | 'achievements' | 'profile') => void;
   onOpenLibrary?: () => void;
 }
 
@@ -71,6 +71,18 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <FolderOpen className="w-3.5 h-3.5" />
               <span>To'plamlarim</span>
+            </button>
+
+            <button
+              onClick={() => onNavigate('games')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                currentView === 'games'
+                  ? 'bg-indigo-600 text-white shadow-xs'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-white/40 dark:hover:bg-slate-700/40'
+              }`}
+            >
+              <Gamepad2 className="w-3.5 h-3.5 text-indigo-500" />
+              <span>O'yinlar</span>
             </button>
 
             <button
@@ -176,23 +188,35 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* Mobile Navigation Bar (Segmented Pill, Seamless Dark/Light Colors) */}
+      {/* Mobile Navigation Bar (4 clean tabs: To'plamlarim, O'yinlar, Andozalar, Yutuqlar) */}
       <nav className="flex md:hidden items-center justify-between p-1 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 mt-2.5 w-full gap-1">
         <button
           onClick={() => onNavigate('home')}
-          className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer ${
+          className={`flex-1 py-1.5 px-1 rounded-xl text-[11px] font-bold transition-all text-center flex items-center justify-center gap-1 cursor-pointer ${
             currentView === 'home' || currentView === 'editor'
               ? 'bg-indigo-600 text-white shadow-xs'
               : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
           <FolderOpen className="w-3.5 h-3.5 shrink-0" />
-          <span className="truncate">To'plamlarim</span>
+          <span className="truncate">To'plamlar</span>
+        </button>
+
+        <button
+          onClick={() => onNavigate('games')}
+          className={`flex-1 py-1.5 px-1 rounded-xl text-[11px] font-bold transition-all text-center flex items-center justify-center gap-1 cursor-pointer ${
+            currentView === 'games'
+              ? 'bg-indigo-600 text-white shadow-xs'
+              : 'text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400'
+          }`}
+        >
+          <Gamepad2 className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
+          <span className="truncate">O'yinlar</span>
         </button>
 
         <button
           onClick={() => onNavigate('templates')}
-          className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer ${
+          className={`flex-1 py-1.5 px-1 rounded-xl text-[11px] font-bold transition-all text-center flex items-center justify-center gap-1 cursor-pointer ${
             currentView === 'templates'
               ? 'bg-indigo-600 text-white shadow-xs'
               : 'text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400'
@@ -204,7 +228,7 @@ export const Header: React.FC<HeaderProps> = ({
 
         <button
           onClick={() => onNavigate('achievements')}
-          className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer ${
+          className={`flex-1 py-1.5 px-1 rounded-xl text-[11px] font-bold transition-all text-center flex items-center justify-center gap-1 cursor-pointer ${
             currentView === 'achievements'
               ? 'bg-indigo-600 text-white shadow-xs'
               : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
