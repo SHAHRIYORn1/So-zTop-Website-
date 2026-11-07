@@ -56,25 +56,56 @@ export function App() {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [authTab, setAuthTab] = useState<'login' | 'register'>('login');
 
-  // Sync with backend on mount if token exists
+  // Live Cross-Device Sync: Mount, Focus, Tab Visibility & Periodic Polling
   useEffect(() => {
+    let isMounted = true;
+
     const checkServerAuth = async () => {
+      const token = api.getToken();
+      if (!token && !authUser) return;
+
       try {
         const res = await api.getMe();
-        if (res && res.user) {
+        if (res && res.user && isMounted) {
           setAuthUser(res.user);
           localStorage.setItem('soztop_user', JSON.stringify(res.user));
           const serverSets = await api.getSets();
-          syncWithServerData(res.user, res.stats, serverSets);
+          if (isMounted) {
+            syncWithServerData(res.user, res.stats, serverSets);
+          }
         }
       } catch (err) {
         console.warn('Backend connection check:', err);
       }
     };
-    if (authUser) {
-      checkServerAuth();
-    }
-  }, []);
+
+    // 1. Initial sync on page mount / refresh
+    checkServerAuth();
+
+    // 2. Cross-tab & Cross-window live sync when user focuses or returns to tab
+    const handleSyncTrigger = () => {
+      if (document.visibilityState === 'visible') {
+        checkServerAuth();
+      }
+    };
+
+    window.addEventListener('visibilitychange', handleSyncTrigger);
+    window.addEventListener('focus', handleSyncTrigger);
+
+    // 3. Periodic background live polling (every 10s when tab is active)
+    const pollInterval = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        checkServerAuth();
+      }
+    }, 10000);
+
+    return () => {
+      isMounted = false;
+      window.removeEventListener('visibilitychange', handleSyncTrigger);
+      window.removeEventListener('focus', handleSyncTrigger);
+      clearInterval(pollInterval);
+    };
+  }, [syncWithServerData, currentView]);
 
   const handleAuthSuccess = async (user: AuthUser) => {
     setAuthUser(user);
