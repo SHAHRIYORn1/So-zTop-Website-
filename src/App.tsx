@@ -96,7 +96,8 @@ export function App() {
   const handleStartGameSetup = (modeId: GameModeId | '?') => {
     const validWords = activeSet.words.filter(w => w.w.trim() && w.tr?.trim());
     if (validWords.length < 4) {
-      addToast("O'yin uchun to'plamda kamida 4 ta tarjimasi bor so'z bo'lishi kerak!", 'error');
+      addToast("O'yin uchun kamida 4 ta so'zli to'plam bo'lishi kerak! To'plam yarating yoki qo'shing", 'error');
+      setCurrentView('editor');
       return;
     }
     setSetupModeId(modeId);

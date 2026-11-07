@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { WordSet, UserStats } from '../types';
-import { DEFAULT_WORD_SETS } from '../data/defaultSets';
 import { BADGES } from '../data/badges';
 import { sounds } from '../services/soundEffects';
 import { api } from '../services/api';
@@ -59,11 +58,10 @@ export function useAppStore() {
     try {
       const saved = localStorage.getItem(`soztop_sets_${initialUsername}`);
       if (saved) return JSON.parse(saved);
-      // If first time for this user
-      localStorage.setItem(`soztop_sets_${initialUsername}`, JSON.stringify(DEFAULT_WORD_SETS));
-      return DEFAULT_WORD_SETS;
+      // New user starts completely fresh with 0 sets
+      return [];
     } catch {
-      return DEFAULT_WORD_SETS;
+      return [];
     }
   });
 
@@ -73,9 +71,9 @@ export function useAppStore() {
     try {
       const saved = localStorage.getItem(`soztop_active_${initialUsername}`);
       if (saved) return saved;
-      return sets[0]?.id || 's1';
+      return '';
     } catch {
-      return 's1';
+      return '';
     }
   });
 
@@ -123,14 +121,13 @@ export function useAppStore() {
         const savedActive = localStorage.getItem(userActiveKey);
         setActiveSetId(savedActive || parsedSets[0]?.id || '');
       } else {
-        setSets(DEFAULT_WORD_SETS);
-        setActiveSetId(DEFAULT_WORD_SETS[0]?.id || 's1');
-        localStorage.setItem(userSetsKey, JSON.stringify(DEFAULT_WORD_SETS));
-        localStorage.setItem(userActiveKey, DEFAULT_WORD_SETS[0]?.id || 's1');
+        // New user starts clean with 0 sets
+        setSets([]);
+        setActiveSetId('');
       }
     } catch {
-      setSets(DEFAULT_WORD_SETS);
-      setActiveSetId('s1');
+      setSets([]);
+      setActiveSetId('');
     }
 
     // Read stats
@@ -196,8 +193,8 @@ export function useAppStore() {
   // Word set helpers + AUTO-SYNC
   const activeSet = sets.find(s => s.id === activeSetId) || sets[0] || {
     id: 's_empty',
-    name: "Bo'sh to'plam",
-    src: 'auto',
+    name: "To'plam yo'q",
+    src: 'en',
     to: 'uz',
     words: [],
   };

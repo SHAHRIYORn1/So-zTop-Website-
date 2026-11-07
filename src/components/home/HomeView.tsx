@@ -82,90 +82,122 @@ export const HomeView: React.FC<HomeViewProps> = ({
   return (
     <div className="space-y-8 pb-12">
       {/* Hero Section */}
-      <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm mt-4">
-        {/* Left Column: Set selector & CTA */}
-        <div className="lg:col-span-7 space-y-5">
-          <div className="space-y-2">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400">
-                {validWords.length} ta so'z
-              </span>
-              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 uppercase">
-                {activeSet.src || 'en'} → {activeSet.to || 'uz'}
-              </span>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-                {activeSet.name}
-              </h1>
-            </div>
+      {allSets.length === 0 ? (
+        <section className="p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-slate-50 dark:from-indigo-950/40 dark:via-slate-900 dark:to-slate-950 border-2 border-dashed border-indigo-200 dark:border-indigo-900 shadow-sm mt-4 text-center space-y-4">
+          <div className="inline-flex p-3 rounded-2xl bg-indigo-600 text-white shadow-lg shadow-indigo-600/30">
+            <BookPlus className="w-8 h-8" />
           </div>
-
-          {/* Quick set switcher */}
-          {allSets.length > 1 && (
-            <div className="flex items-center gap-2">
-              <label className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                To'plamni almashtirish:
-              </label>
-              <select
-                value={activeSet.id}
-                onChange={e => onSelectSet(e.target.value)}
-                className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              >
-                {allSets.map(s => (
-                  <option key={s.id} value={s.id}>
-                    {s.name} ({s.words.length} ta so'z)
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-
-          {/* Action buttons */}
-          <div className="flex flex-wrap gap-3 pt-2">
-            {canPlay ? (
-              <button
-                onClick={handleRandomPlay}
-                className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold text-base shadow-lg shadow-indigo-500/25 transition-all cursor-pointer"
-              >
-                <Shuffle className="w-5 h-5" />
-                <span>Tasodifiy o'yin</span>
-              </button>
-            ) : (
-              <button
-                onClick={onOpenEditor}
-                className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-base transition-all cursor-pointer"
-              >
-                <BookPlus className="w-5 h-5" />
-                <span>So'z qo'shish (kamida 4 ta kerak)</span>
-              </button>
-            )}
-
-            {/* Open Preset Library Button */}
-            <button
-              onClick={onOpenLibrary}
-              className="flex items-center gap-2 px-5 py-3.5 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 font-bold text-sm transition-all cursor-pointer shadow-xs"
-            >
-              <Compass className="w-4 h-4 text-indigo-500" />
-              <span>Tayyor to'plamlar</span>
-            </button>
-
+          <div className="max-w-md mx-auto space-y-2">
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+              Hali to'plamingiz yo'q
+            </h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              O'yinlarni boshlash uchun o'zingiz yangi so'z to'plami yarating yoki tayyor kutubxonamizdan qo'shing!
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
             <button
               onClick={onOpenEditor}
-              className="flex items-center gap-2 px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold text-sm transition-all cursor-pointer"
+              className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-lg shadow-indigo-600/25 active:scale-95 transition-all cursor-pointer"
             >
-              <BookPlus className="w-4 h-4 text-slate-500" />
-              <span>Tahrirlash</span>
+              <BookPlus className="w-4 h-4" />
+              <span>Yangi to'plam yaratish</span>
+            </button>
+            <button
+              onClick={onOpenLibrary}
+              className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-indigo-400 text-slate-800 dark:text-slate-200 font-bold text-sm shadow-xs active:scale-95 transition-all cursor-pointer"
+            >
+              <Compass className="w-4 h-4 text-indigo-500" />
+              <span>Kutubxonadan qo'shish</span>
             </button>
           </div>
-        </div>
+        </section>
+      ) : (
+        <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm mt-4">
+          {/* Left Column: Set selector & CTA */}
+          <div className="lg:col-span-7 space-y-5">
+            <div className="space-y-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400">
+                  {validWords.length} ta so'z
+                </span>
+                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 uppercase">
+                  {activeSet.src || 'en'} → {activeSet.to || 'uz'}
+                </span>
+              </div>
 
-        {/* Right Column: Interactive Word Scramble Rack */}
-        <div className="lg:col-span-5">
-          <WordRack words={validWords} />
-        </div>
-      </section>
+              <div className="flex items-center gap-3">
+                <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+                  {activeSet.name}
+                </h1>
+              </div>
+            </div>
+
+            {/* Quick set switcher */}
+            {allSets.length > 1 && (
+              <div className="flex items-center gap-2">
+                <label className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                  To'plamni almashtirish:
+                </label>
+                <select
+                  value={activeSet.id}
+                  onChange={e => onSelectSet(e.target.value)}
+                  className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  {allSets.map(s => (
+                    <option key={s.id} value={s.id}>
+                      {s.name} ({s.words.length} ta so'z)
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {/* Action buttons */}
+            <div className="flex flex-wrap gap-3 pt-2">
+              {canPlay ? (
+                <button
+                  onClick={handleRandomPlay}
+                  className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold text-base shadow-lg shadow-indigo-500/25 transition-all cursor-pointer"
+                >
+                  <Shuffle className="w-5 h-5" />
+                  <span>Tasodifiy o'yin</span>
+                </button>
+              ) : (
+                <button
+                  onClick={onOpenEditor}
+                  className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-base transition-all cursor-pointer"
+                >
+                  <BookPlus className="w-5 h-5" />
+                  <span>So'z qo'shish (kamida 4 ta kerak)</span>
+                </button>
+              )}
+
+              {/* Open Preset Library Button */}
+              <button
+                onClick={onOpenLibrary}
+                className="flex items-center gap-2 px-5 py-3.5 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 font-bold text-sm transition-all cursor-pointer shadow-xs"
+              >
+                <Compass className="w-4 h-4 text-indigo-500" />
+                <span>Tayyor to'plamlar</span>
+              </button>
+
+              <button
+                onClick={onOpenEditor}
+                className="flex items-center gap-2 px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold text-sm transition-all cursor-pointer"
+              >
+                <BookPlus className="w-4 h-4 text-slate-500" />
+                <span>Tahrirlash</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Right Column: Interactive Word Scramble Rack */}
+          <div className="lg:col-span-5">
+            <WordRack words={validWords} />
+          </div>
+        </section>
+      )}
 
       {/* Game Modes Categorized Grid */}
       <section className="space-y-8">
@@ -182,23 +214,27 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 {modes.map(mode => (
                   <button
                     key={mode.id}
-                    disabled={!canPlay}
                     onClick={() => onStartGame(mode.id)}
                     className={`flex items-center gap-3.5 p-4 rounded-2xl border text-left transition-all ${
                       canPlay
                         ? 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-indigo-500 dark:hover:border-indigo-500 hover:shadow-md active:scale-98 cursor-pointer'
-                        : 'opacity-50 cursor-not-allowed bg-slate-50 dark:bg-slate-900 border-slate-100 dark:border-slate-800'
+                        : 'bg-slate-50/80 dark:bg-slate-900/60 border-slate-200/60 dark:border-slate-800 hover:border-amber-400 cursor-pointer'
                     }`}
                   >
                     <div className="flex-none p-3 rounded-xl bg-slate-100 dark:bg-slate-800">
                       {getModeIcon(mode.id)}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="font-bold text-slate-900 dark:text-slate-100 text-base">
-                        {mode.name}
+                      <div className="font-bold text-slate-900 dark:text-slate-100 text-base flex items-center gap-2">
+                        <span>{mode.name}</span>
+                        {!canPlay && (
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-600 dark:text-amber-400 font-bold">
+                            To'plam qo'shing
+                          </span>
+                        )}
                       </div>
                       <div className="text-xs text-slate-500 dark:text-slate-400 truncate">
-                        {mode.desc}
+                        {canPlay ? mode.desc : "O'ynash uchun to'plam qo'shing"}
                       </div>
                     </div>
                     <Play className="w-4 h-4 text-slate-300 dark:text-slate-600 group-hover:text-indigo-500" />
