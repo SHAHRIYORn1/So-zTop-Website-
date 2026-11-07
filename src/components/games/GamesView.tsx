@@ -5,8 +5,6 @@ import {
   Gamepad2,
   Shuffle,
   Play,
-  BookPlus,
-  Sparkles,
   ChevronDown,
   Check,
   HelpCircle,
@@ -71,14 +69,11 @@ export const GamesView: React.FC<GamesViewProps> = ({
   allSets,
   onSelectSet,
   onStartGame,
-  onOpenEditor,
-  onOpenLibrary,
 }) => {
   const [isSetSwitcherOpen, setIsSetSwitcherOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   const validWords = activeSet?.words ? activeSet.words.filter(w => w.w.trim().length > 0) : [];
-  const canPlay = validWords.length >= 4;
 
   const filteredCategories = selectedCategory === 'all'
     ? CATEGORIES
@@ -183,55 +178,6 @@ export const GamesView: React.FC<GamesViewProps> = ({
         )}
       </div>
 
-      {/* No sets state warning */}
-      {allSets.length === 0 ? (
-        <div className="p-8 sm:p-12 text-center rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-4">
-          <div className="w-16 h-16 rounded-3xl bg-amber-500/10 text-amber-500 flex items-center justify-center mx-auto text-3xl">
-            📚
-          </div>
-          <div className="max-w-md mx-auto space-y-1">
-            <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">
-              Hali to'plamingiz yo'q
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-500">
-              O'yinlarni o'ynash uchun avval yangi so'z to'plami yarating yoki tayyor andozalardan qo'shing!
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-            <button
-              onClick={onOpenEditor}
-              className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-indigo-600 text-white font-bold text-xs sm:text-sm shadow-md transition-all cursor-pointer"
-            >
-              <BookPlus className="w-4 h-4" />
-              <span>Yangi to'plam yaratish</span>
-            </button>
-            <button
-              onClick={onOpenLibrary}
-              className="flex items-center gap-2 px-5 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 font-bold text-xs sm:text-sm transition-all cursor-pointer"
-            >
-              <Sparkles className="w-4 h-4 text-amber-500" />
-              <span>Tayyor andozalardan qo'shish</span>
-            </button>
-          </div>
-        </div>
-      ) : !canPlay ? (
-        /* Insufficient words warning banner */
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-800 dark:text-amber-300">
-          <div className="flex items-center gap-2.5">
-            <AlertCircle className="w-5 h-5 text-amber-500 shrink-0" />
-            <p className="text-xs sm:text-sm font-semibold">
-              Tanlangan to'plamda <strong>{validWords.length} ta</strong> so'z bor. O'yinlarni o'ynash uchun kamida <strong>4 ta</strong> so'z bo'lishi kerak.
-            </p>
-          </div>
-          <button
-            onClick={onOpenEditor}
-            className="self-start sm:self-auto px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs transition-all cursor-pointer shrink-0"
-          >
-            So'z qo'shish →
-          </button>
-        </div>
-      ) : null}
-
       {/* Category Filter Pills Bar */}
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
         <button
@@ -283,11 +229,7 @@ export const GamesView: React.FC<GamesViewProps> = ({
                   <button
                     key={mode.id}
                     onClick={() => onStartGame(mode.id)}
-                    className={`flex items-center gap-3.5 p-4 rounded-3xl border text-left transition-all group ${
-                      canPlay
-                        ? 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-indigo-500 dark:hover:border-indigo-500 hover:shadow-lg active:scale-98 cursor-pointer'
-                        : 'bg-slate-50/70 dark:bg-slate-900/40 border-slate-200/60 dark:border-slate-800 cursor-pointer opacity-90'
-                    }`}
+                    className="flex items-center gap-3.5 p-4 rounded-3xl border text-left transition-all group bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-indigo-500 dark:hover:border-indigo-500 hover:shadow-lg active:scale-98 cursor-pointer"
                   >
                     <div className="flex-none p-3 rounded-2xl bg-slate-100 dark:bg-slate-800 group-hover:scale-105 transition-transform">
                       {getModeIcon(mode.id)}

@@ -137,13 +137,13 @@ export function App() {
   const handleStartGameSetup = (modeId: GameModeId | '?') => {
     // Toplamsiz o'yin o'ynamoqchi bo'lsa xabar chiqarish va to'plam qo'shishga yo'naltirish
     if (sets.length === 0) {
-      addToast("O'yin o'ynash uchun avval to'plam qo'shing!", 'error');
-      setCurrentView('templates');
+      addToast("Avval to'plam qo'shing, keyin o'yin o'ynash mumkin!", 'error');
+      setCurrentView('editor');
       return;
     }
-    const validWords = activeSet.words.filter(w => w.w.trim() && w.tr?.trim());
+    const validWords = activeSet?.words ? activeSet.words.filter(w => w.w.trim() && w.tr?.trim()) : [];
     if (validWords.length < 4) {
-      addToast("O'yin o'ynash uchun kamida 4 ta so'z kerak! Avval to'plamga so'z qo'shing.", 'error');
+      addToast("Avval to'plamga kamida 4 ta so'z qo'shing, keyin o'yin o'ynash mumkin!", 'error');
       setCurrentView('editor');
       return;
     }
