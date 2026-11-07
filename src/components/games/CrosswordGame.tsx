@@ -249,7 +249,7 @@ export const CrosswordGame: React.FC<CrosswordGameProps> = ({
             Harflarni kiriting:
           </p>
 
-          <div className="flex items-center justify-center gap-1.5 sm:gap-2">
+          <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-2 max-w-full">
             {Array.from({ length: activeEntry.word.length }).map((_, idx) => (
               <input
                 key={idx}
@@ -264,7 +264,7 @@ export const CrosswordGame: React.FC<CrosswordGameProps> = ({
                     nextInput?.focus();
                   }
                 }}
-                className="w-10 h-12 sm:w-12 sm:h-14 text-center font-black text-xl uppercase rounded-xl border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-400 outline-none"
+                className="w-8 h-10 sm:w-12 sm:h-14 text-center font-black text-base sm:text-xl uppercase rounded-lg sm:rounded-xl border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-400 outline-none shrink-0"
               />
             ))}
           </div>

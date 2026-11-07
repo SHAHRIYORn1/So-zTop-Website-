@@ -220,17 +220,17 @@ export const WheelGame: React.FC<WheelGameProps> = ({
       </p>
 
       {/* Wheel Container with Pointer Pin */}
-      <div className="relative flex items-center justify-center p-4">
+      <div className="relative flex items-center justify-center p-2 sm:p-4 max-w-full">
         {/* Pointer Pin at top */}
-        <div className="absolute top-1 z-20 w-0 h-0 border-x-[14px] border-x-transparent border-t-[28px] border-t-rose-500 drop-shadow-md" />
+        <div className="absolute top-1 z-20 w-0 h-0 border-x-[12px] sm:border-x-[14px] border-x-transparent border-t-[24px] sm:border-t-[28px] border-t-rose-500 drop-shadow-md" />
 
-        {/* Wheel Canvas */}
-        <div className="rounded-full shadow-2xl border-4 border-white dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden">
+        {/* Wheel Canvas (Responsive: scales down to 280px on phone, 340px on tablet/desktop) */}
+        <div className="rounded-full shadow-2xl border-4 border-white dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden w-[280px] h-[280px] sm:w-[340px] sm:h-[340px] max-w-full">
           <canvas
             ref={canvasRef}
             width={340}
             height={340}
-            className="cursor-pointer transition-transform"
+            className="w-full h-full cursor-pointer transition-transform"
             onClick={spin}
           />
         </div>

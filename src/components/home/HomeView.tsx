@@ -113,62 +113,64 @@ export const HomeView: React.FC<HomeViewProps> = ({
           </div>
         </section>
       ) : (
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm mt-4">
+        <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center p-4 sm:p-8 rounded-2xl sm:rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm mt-3 sm:mt-4 w-full overflow-hidden">
           {/* Left Column: Set selector & CTA */}
-          <div className="lg:col-span-7 space-y-5">
+          <div className="lg:col-span-7 space-y-4 sm:space-y-5 w-full">
             <div className="space-y-2">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400">
+                <span className="px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400">
                   {validWords.length} ta so'z
                 </span>
-                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 uppercase">
+                <span className="px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 uppercase">
                   {activeSet.src || 'en'} → {activeSet.to || 'uz'}
                 </span>
               </div>
 
               <div className="flex items-center gap-3">
-                <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+                <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight break-words">
                   {activeSet.name}
                 </h1>
               </div>
             </div>
 
-            {/* Quick set switcher */}
+            {/* Quick set switcher (Responsive: stacked on mobile, inline on desktop, ZERO overflow) */}
             {allSets.length > 1 && (
-              <div className="flex items-center gap-2">
-                <label className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 w-full">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-400 shrink-0">
                   To'plamni almashtirish:
                 </label>
-                <select
-                  value={activeSet.id}
-                  onChange={e => onSelectSet(e.target.value)}
-                  className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                >
-                  {allSets.map(s => (
-                    <option key={s.id} value={s.id}>
-                      {s.name} ({s.words.length} ta so'z)
-                    </option>
-                  ))}
-                </select>
+                <div className="relative w-full sm:w-auto flex-1 max-w-full">
+                  <select
+                    value={activeSet.id}
+                    onChange={e => onSelectSet(e.target.value)}
+                    className="w-full px-3 py-2.5 sm:py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 truncate cursor-pointer shadow-2xs"
+                  >
+                    {allSets.map(s => (
+                      <option key={s.id} value={s.id}>
+                        {s.name} ({s.words.length} ta so'z)
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
             )}
 
-            {/* Action buttons */}
-            <div className="flex flex-wrap gap-3 pt-2">
+            {/* Action buttons (Clean vertical stack on mobile, flex on desktop) */}
+            <div className="grid grid-cols-1 sm:flex sm:flex-wrap gap-2.5 pt-1 w-full">
               {canPlay ? (
                 <button
                   onClick={handleRandomPlay}
-                  className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold text-base shadow-lg shadow-indigo-500/25 transition-all cursor-pointer"
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold text-sm sm:text-base shadow-lg shadow-indigo-500/25 transition-all cursor-pointer"
                 >
-                  <Shuffle className="w-5 h-5" />
+                  <Shuffle className="w-4 h-4 sm:w-5 sm:h-5" />
                   <span>Tasodifiy o'yin</span>
                 </button>
               ) : (
                 <button
                   onClick={onOpenEditor}
-                  className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-base transition-all cursor-pointer"
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm sm:text-base transition-all cursor-pointer"
                 >
-                  <BookPlus className="w-5 h-5" />
+                  <BookPlus className="w-4 h-4 sm:w-5 sm:h-5" />
                   <span>So'z qo'shish (kamida 4 ta kerak)</span>
                 </button>
               )}
@@ -176,7 +178,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               {/* Open Preset Library Button */}
               <button
                 onClick={onOpenLibrary}
-                className="flex items-center gap-2 px-5 py-3.5 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 font-bold text-sm transition-all cursor-pointer shadow-xs"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 font-bold text-sm transition-all cursor-pointer shadow-xs"
               >
                 <Compass className="w-4 h-4 text-indigo-500" />
                 <span>Tayyor to'plamlar</span>
@@ -184,7 +186,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
               <button
                 onClick={onOpenEditor}
-                className="flex items-center gap-2 px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold text-sm transition-all cursor-pointer"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold text-sm transition-all cursor-pointer"
               >
                 <BookPlus className="w-4 h-4 text-slate-500" />
                 <span>Tahrirlash</span>

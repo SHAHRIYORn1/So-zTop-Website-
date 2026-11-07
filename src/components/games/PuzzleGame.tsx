@@ -163,12 +163,12 @@ export const PuzzleGame: React.FC<PuzzleGameProps> = ({
       </div>
 
       {/* Assembly Area (Jigsaw slot tray) */}
-      <div className="bg-slate-100 dark:bg-slate-900/60 border-2 border-dashed border-indigo-300 dark:border-indigo-950 rounded-3xl p-6 text-center">
-        <div className="flex flex-wrap items-center justify-center gap-2 min-h-[75px]">
+      <div className="bg-slate-100 dark:bg-slate-900/60 border-2 border-dashed border-indigo-300 dark:border-indigo-950 rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-center">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 min-h-[60px] sm:min-h-[75px]">
           {selectedPieces.map((piece, i) => (
             <div
               key={i}
-              className={`px-5 py-4 rounded-2xl font-black text-xl sm:text-2xl flex items-center justify-center shadow-lg transition-transform animate-in zoom-in-95 ${
+              className={`px-3 py-2.5 sm:px-5 sm:py-4 rounded-xl sm:rounded-2xl font-black text-lg sm:text-2xl flex items-center justify-center shadow-lg transition-transform animate-in zoom-in-95 shrink-0 ${
                 status === 'correct'
                   ? 'bg-emerald-500 text-white border-2 border-emerald-400'
                   : status === 'wrong'
@@ -205,18 +205,18 @@ export const PuzzleGame: React.FC<PuzzleGameProps> = ({
       </div>
 
       {/* Pieces Tray */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-xl space-y-4">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl space-y-4">
         <p className="text-xs font-bold text-slate-400 uppercase tracking-wider text-center">
           Mavjud bo'laklar:
         </p>
 
-        <div className="flex flex-wrap items-center justify-center gap-3">
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
           {pieces.map(piece => (
             <button
               key={piece.id}
               type="button"
               onClick={() => handlePickPiece(piece)}
-              className="px-6 py-4 rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white font-black text-xl sm:text-2xl shadow-lg shadow-indigo-500/25 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+              className="px-4 py-3 sm:px-6 sm:py-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white font-black text-lg sm:text-2xl shadow-lg shadow-indigo-500/25 hover:scale-105 active:scale-95 transition-all cursor-pointer shrink-0"
             >
               {piece.text}
             </button>

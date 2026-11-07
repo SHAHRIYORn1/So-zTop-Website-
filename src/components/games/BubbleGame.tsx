@@ -204,7 +204,7 @@ export const BubbleGame: React.FC<BubbleGameProps> = ({
       </div>
 
       {/* Bubble Arena */}
-      <div className="relative w-full h-96 bg-gradient-to-b from-sky-50 to-indigo-100 dark:from-slate-950 dark:to-slate-900 rounded-3xl border-2 border-dashed border-sky-300 dark:border-slate-800 overflow-hidden shadow-inner select-none">
+      <div className="relative w-full h-80 sm:h-96 bg-gradient-to-b from-sky-50 to-indigo-100 dark:from-slate-950 dark:to-slate-900 rounded-3xl border-2 border-dashed border-sky-300 dark:border-slate-800 overflow-hidden shadow-inner select-none touch-none">
         {bubbles.map(b => {
           if (b.popped) {
             return (
@@ -227,7 +227,7 @@ export const BubbleGame: React.FC<BubbleGameProps> = ({
                 left: `${b.xPercent}%`,
                 top: `${b.y}%`,
               }}
-              className={`absolute transform -translate-x-1/2 -translate-y-1/2 px-4 py-3 rounded-full bg-gradient-to-br ${b.color} text-white font-extrabold text-sm shadow-xl hover:scale-110 active:scale-95 transition-transform duration-75 cursor-pointer border-2 border-white/40 backdrop-blur-sm animate-pulse`}
+              className={`absolute transform -translate-x-1/2 -translate-y-1/2 px-3 py-2 sm:px-4 sm:py-3 rounded-full bg-gradient-to-br ${b.color} text-white font-extrabold text-xs sm:text-sm shadow-xl hover:scale-110 active:scale-95 transition-transform duration-75 cursor-pointer border-2 border-white/40 backdrop-blur-sm animate-pulse max-w-[120px] sm:max-w-none truncate`}
             >
               {b.text}
             </button>

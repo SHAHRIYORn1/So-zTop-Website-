@@ -193,15 +193,15 @@ export const DragLetterGame: React.FC<DragLetterGameProps> = ({
       </div>
 
       {/* Target Slots */}
-      <div className="bg-slate-100/80 dark:bg-slate-900/50 border-2 border-dashed border-indigo-200 dark:border-indigo-950/70 rounded-3xl p-6 text-center">
-        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 min-h-[70px]">
+      <div className="bg-slate-100/80 dark:bg-slate-900/50 border-2 border-dashed border-indigo-200 dark:border-indigo-950/70 rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-center">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-3 min-h-[55px] sm:min-h-[70px]">
           {slots.map((tile, idx) => (
             <div
               key={idx}
               onDragOver={e => e.preventDefault()}
               onDrop={() => handleDropOnSlot(idx)}
               onClick={() => handleTapSlot(idx)}
-              className={`w-12 h-14 sm:w-14 sm:h-16 rounded-2xl flex items-center justify-center font-black text-xl sm:text-2xl transition-all cursor-pointer ${
+              className={`w-9 h-12 sm:w-14 sm:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center font-black text-base sm:text-2xl transition-all cursor-pointer ${
                 tile
                   ? status === 'correct'
                     ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30 border-2 border-emerald-400'
@@ -248,14 +248,14 @@ export const DragLetterGame: React.FC<DragLetterGameProps> = ({
           </button>
         </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 min-h-[60px]">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-3 min-h-[50px] sm:min-h-[60px]">
           {pool.map(tile => (
             <div
               key={tile.id}
               draggable
               onDragStart={() => handleDragStart(tile)}
               onClick={() => handleTapPool(tile)}
-              className="w-12 h-14 sm:w-14 sm:h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-600 text-white font-black text-xl sm:text-2xl flex items-center justify-center shadow-lg shadow-indigo-500/25 cursor-grab active:cursor-grabbing hover:scale-105 active:scale-95 transition-all"
+              className="w-9 h-12 sm:w-14 sm:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-600 text-white font-black text-base sm:text-2xl flex items-center justify-center shadow-lg shadow-indigo-500/25 cursor-grab active:cursor-grabbing hover:scale-105 active:scale-95 transition-all shrink-0"
             >
               {tile.letter}
             </div>

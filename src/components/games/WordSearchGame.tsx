@@ -181,8 +181,8 @@ export const WordSearchGame: React.FC<WordSearchGameProps> = ({
         })}
       </div>
 
-      {/* 9x9 Grid */}
-      <div className="grid grid-cols-9 gap-1.5 p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-xl">
+      {/* 9x9 Grid (Responsive: fits 360px+ phones without scroll) */}
+      <div className="grid grid-cols-9 gap-1 sm:gap-1.5 p-2 sm:p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl shadow-xl max-w-full">
         {grid.map((letter, idx) => {
           const isSelected = selectedStart === idx;
           const isHighlighted = highlightedCells.has(idx);
@@ -192,7 +192,7 @@ export const WordSearchGame: React.FC<WordSearchGameProps> = ({
               key={idx}
               type="button"
               onClick={() => handleCellClick(idx)}
-              className={`aspect-square rounded-xl font-black text-sm flex items-center justify-center transition-all cursor-pointer border ${
+              className={`aspect-square rounded-lg sm:rounded-xl font-black text-xs sm:text-sm flex items-center justify-center transition-all cursor-pointer border ${
                 isSelected
                   ? 'bg-indigo-600 text-white border-indigo-600 scale-105 shadow-md'
                   : isHighlighted

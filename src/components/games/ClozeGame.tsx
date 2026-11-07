@@ -252,15 +252,15 @@ export const ClozeGame: React.FC<ClozeGameProps> = ({
           </button>
         </div>
 
-        {/* Word slots with cut-out holes */}
-        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 py-2">
+        {/* Word slots with cut-out holes (Adaptive sizing for phones) */}
+        <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-3 py-2">
           {slots.map(slot => {
             if (!slot.isHole) {
               // Fixed visible letter
               return (
                 <div
                   key={slot.index}
-                  className="w-12 h-14 sm:w-14 sm:h-16 rounded-2xl bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 font-black text-2xl sm:text-3xl text-slate-800 dark:text-slate-100 flex items-center justify-center shadow-xs"
+                  className="w-9 h-12 sm:w-14 sm:h-16 rounded-xl sm:rounded-2xl bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 font-black text-lg sm:text-3xl text-slate-800 dark:text-slate-100 flex items-center justify-center shadow-xs shrink-0"
                 >
                   {slot.originalChar}
                 </div>
@@ -274,7 +274,7 @@ export const ClozeGame: React.FC<ClozeGameProps> = ({
               <div
                 key={slot.index}
                 onClick={() => handleHoleClick(slot.index)}
-                className={`relative w-12 h-14 sm:w-14 sm:h-16 rounded-2xl font-black text-2xl sm:text-3xl flex items-center justify-center transition-all cursor-pointer ${
+                className={`relative w-9 h-12 sm:w-14 sm:h-16 rounded-xl sm:rounded-2xl font-black text-lg sm:text-3xl flex items-center justify-center transition-all cursor-pointer shrink-0 ${
                   status === 'correct'
                     ? 'bg-emerald-500 text-white border-2 border-emerald-400 shadow-lg shadow-emerald-500/30'
                     : status === 'wrong'
@@ -288,7 +288,7 @@ export const ClozeGame: React.FC<ClozeGameProps> = ({
                 {isFilled ? (
                   slot.filledChar
                 ) : (
-                  <span className="text-sm font-bold text-amber-500/80">🕳️</span>
+                  <span className="text-xs sm:text-sm font-bold text-amber-500/80">🕳️</span>
                 )}
               </div>
             );
@@ -318,14 +318,14 @@ export const ClozeGame: React.FC<ClozeGameProps> = ({
           Teshikka mos harfni bosing:
         </p>
 
-        <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
           {plugs.map(plug => (
             <button
               key={plug.id}
               type="button"
               disabled={plug.isUsed || status !== 'idle'}
               onClick={() => handlePlugClick(plug)}
-              className={`w-12 h-14 sm:w-14 sm:h-16 rounded-2xl font-black text-xl sm:text-2xl transition-all ${
+              className={`w-9 h-12 sm:w-14 sm:h-16 rounded-xl sm:rounded-2xl font-black text-lg sm:text-2xl transition-all shrink-0 ${
                 plug.isUsed
                   ? 'bg-slate-100 dark:bg-slate-800/40 text-slate-300 dark:text-slate-700 cursor-not-allowed border border-transparent'
                   : 'bg-gradient-to-br from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white shadow-lg shadow-indigo-500/25 hover:scale-105 active:scale-95 cursor-pointer border border-indigo-400/30'

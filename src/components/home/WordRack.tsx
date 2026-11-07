@@ -47,19 +47,19 @@ export const WordRack: React.FC<WordRackProps> = ({ words }) => {
     : scrambled;
 
   return (
-    <div className="flex flex-col items-center justify-center p-6 rounded-2xl bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 transition-all">
+    <div className="flex flex-col items-center justify-center p-3 sm:p-6 rounded-2xl bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 transition-all w-full overflow-hidden">
       <div
         onClick={handleSolveToggle}
-        className="flex flex-wrap gap-2 justify-center cursor-pointer py-3 select-none"
+        className="flex flex-wrap gap-1.5 sm:gap-2 justify-center cursor-pointer py-2 sm:py-3 select-none max-w-full"
         title="Bosing, so'z yig'iladi"
       >
         {displayLetters.map((char, index) => (
           <span
             key={`${char}-${index}`}
-            className={`flex items-center justify-center w-11 h-14 sm:w-13 sm:h-16 rounded-xl font-black text-xl sm:text-2xl transition-all duration-200 ${
+            className={`flex items-center justify-center w-9 h-12 sm:w-13 sm:h-16 rounded-lg sm:rounded-xl font-black text-lg sm:text-2xl transition-all duration-200 shrink-0 ${
               isSolved
-                ? 'bg-emerald-500 text-white shadow-[0_4px_0_#059669] scale-105'
-                : 'bg-amber-400 dark:bg-amber-500 text-amber-950 shadow-[0_4px_0_#b45309] hover:-translate-y-1'
+                ? 'bg-emerald-500 text-white shadow-[0_3px_0_#059669] scale-105'
+                : 'bg-amber-400 dark:bg-amber-500 text-amber-950 shadow-[0_3px_0_#b45309] hover:-translate-y-0.5'
             }`}
           >
             {char}
