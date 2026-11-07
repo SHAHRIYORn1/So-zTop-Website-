@@ -1,0 +1,81 @@
+import type { Badge, UserStats } from '../types';
+
+export const BADGES: Badge[] = [
+  {
+    id: 'first',
+    icon: '🌱',
+    name: 'Birinchi qadam',
+    desc: "Birinchi o'yinni tugat",
+    isUnlocked: (s: UserStats) => s.games >= 1,
+  },
+  {
+    id: 'g10',
+    icon: '🎮',
+    name: "O'yinchi",
+    desc: "10 ta o'yin o'yna",
+    isUnlocked: (s: UserStats) => s.games >= 10,
+  },
+  {
+    id: 'g50',
+    icon: '🏆',
+    name: 'Chempion',
+    desc: "50 ta o'yin o'yna",
+    isUnlocked: (s: UserStats) => s.games >= 50,
+  },
+  {
+    id: 'perf',
+    icon: '💯',
+    name: 'Mukammal',
+    desc: "Bitta o'yinni 100% bilan tugat",
+    isUnlocked: (s: UserStats) => s.perfect >= 1,
+  },
+  {
+    id: 'm10',
+    icon: '🧠',
+    name: "10 ta so'z ustasi",
+    desc: "10 ta so'zni to'liq o'zlashtir",
+    isUnlocked: (s: UserStats) => Object.values(s.knownWords).filter(c => c >= 3).length >= 10,
+  },
+  {
+    id: 'm50',
+    icon: '🎓',
+    name: "50 ta so'z ustasi",
+    desc: "50 ta so'zni to'liq o'zlashtir",
+    isUnlocked: (s: UserStats) => Object.values(s.knownWords).filter(c => c >= 3).length >= 50,
+  },
+  {
+    id: 's3',
+    icon: '🔥',
+    name: '3 kun ketma-ket',
+    desc: "3 kun ketma-ket mashq qil",
+    isUnlocked: (s: UserStats) => s.best >= 3,
+  },
+  {
+    id: 's7',
+    icon: '🚀',
+    name: '7 kun ketma-ket',
+    desc: "7 kun ketma-ket mashq qil",
+    isUnlocked: (s: UserStats) => s.best >= 7,
+  },
+  {
+    id: 'st30',
+    icon: '⭐',
+    name: '30 yulduz',
+    desc: "30 ta yulduz yig'",
+    isUnlocked: (s: UserStats) => s.stars >= 30,
+  },
+  {
+    id: 'st100',
+    icon: '🌟',
+    name: '100 yulduz',
+    desc: "100 ta yulduz yig'",
+    isUnlocked: (s: UserStats) => s.stars >= 100,
+  },
+  {
+    id: 'var',
+    icon: '🧭',
+    name: 'Tadqiqotchi',
+    desc: "10 xil o'yinni sinab ko'r",
+    isUnlocked: (s: UserStats) => Object.keys(s.playedModes).length >= 10,
+  },
+];

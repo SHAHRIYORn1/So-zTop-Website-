@@ -1,0 +1,214 @@
+import React from 'react';
+import type { WordSet, GameModeId } from '../../types';
+import { GAME_MODES, CATEGORIES } from '../../data/gameModes';
+import { WordRack } from './WordRack';
+import {
+  Play,
+  Shuffle,
+  BookPlus,
+  Compass,
+  HelpCircle,
+  CheckCircle2,
+  GitCompare,
+  Layers,
+  Disc,
+  CircleDot,
+  PenTool,
+  Hash,
+  Headphones,
+  Ear,
+  AlertCircle,
+  Move,
+  Hand,
+  Puzzle,
+  Box,
+  Search,
+  Grid,
+  Zap,
+  Bomb,
+  Activity,
+} from 'lucide-react';
+
+interface HomeViewProps {
+  activeSet: WordSet;
+  allSets: WordSet[];
+  onSelectSet: (id: string) => void;
+  onStartGame: (modeId: GameModeId | '?') => void;
+  onOpenEditor: () => void;
+  onOpenLibrary: () => void;
+}
+
+// Icon mapper for game modes
+const getModeIcon = (id: GameModeId) => {
+  switch (id) {
+    case 'quiz': return <HelpCircle className="w-6 h-6 text-indigo-500" />;
+    case 'tf': return <CheckCircle2 className="w-6 h-6 text-emerald-500" />;
+    case 'match': return <GitCompare className="w-6 h-6 text-blue-500" />;
+    case 'memory': return <Layers className="w-6 h-6 text-violet-500" />;
+    case 'wheel': return <Disc className="w-6 h-6 text-amber-500" />;
+    case 'bubble': return <CircleDot className="w-6 h-6 text-cyan-500" />;
+    case 'fill': return <PenTool className="w-6 h-6 text-teal-500" />;
+    case 'hang': return <Hash className="w-6 h-6 text-pink-500" />;
+    case 'dictation': return <Headphones className="w-6 h-6 text-purple-500" />;
+    case 'listen': return <Ear className="w-6 h-6 text-rose-500" />;
+    case 'spot': return <AlertCircle className="w-6 h-6 text-orange-500" />;
+    case 'scramble': return <Move className="w-6 h-6 text-amber-600" />;
+    case 'dragl': return <Hand className="w-6 h-6 text-blue-600" />;
+    case 'puzzle': return <Puzzle className="w-6 h-6 text-emerald-600" />;
+    case 'cloze': return <Box className="w-6 h-6 text-indigo-600" />;
+    case 'wsearch': return <Search className="w-6 h-6 text-teal-600" />;
+    case 'crossword': return <Grid className="w-6 h-6 text-purple-600" />;
+    case 'race': return <Zap className="w-6 h-6 text-yellow-500" />;
+    case 'bomb': return <Bomb className="w-6 h-6 text-red-500" />;
+    case 'simon': return <Activity className="w-6 h-6 text-fuchsia-500" />;
+  }
+};
+
+export const HomeView: React.FC<HomeViewProps> = ({
+  activeSet,
+  allSets,
+  onSelectSet,
+  onStartGame,
+  onOpenEditor,
+  onOpenLibrary,
+}) => {
+  const validWords = activeSet.words.filter(w => w.w.trim().length > 0);
+  const canPlay = validWords.length >= 4;
+
+  const handleRandomPlay = () => {
+    onStartGame('?');
+  };
+
+  return (
+    <div className="space-y-8 pb-12">
+      {/* Hero Section */}
+      <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm mt-4">
+        {/* Left Column: Set selector & CTA */}
+        <div className="lg:col-span-7 space-y-5">
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400">
+                {validWords.length} ta so'z
+              </span>
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 uppercase">
+                {activeSet.src || 'en'} → {activeSet.to || 'uz'}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+                {activeSet.name}
+              </h1>
+            </div>
+          </div>
+
+          {/* Quick set switcher */}
+          {allSets.length > 1 && (
+            <div className="flex items-center gap-2">
+              <label className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                To'plamni almashtirish:
+              </label>
+              <select
+                value={activeSet.id}
+                onChange={e => onSelectSet(e.target.value)}
+                className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                {allSets.map(s => (
+                  <option key={s.id} value={s.id}>
+                    {s.name} ({s.words.length} ta so'z)
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {/* Action buttons */}
+          <div className="flex flex-wrap gap-3 pt-2">
+            {canPlay ? (
+              <button
+                onClick={handleRandomPlay}
+                className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold text-base shadow-lg shadow-indigo-500/25 transition-all cursor-pointer"
+              >
+                <Shuffle className="w-5 h-5" />
+                <span>Tasodifiy o'yin</span>
+              </button>
+            ) : (
+              <button
+                onClick={onOpenEditor}
+                className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-base transition-all cursor-pointer"
+              >
+                <BookPlus className="w-5 h-5" />
+                <span>So'z qo'shish (kamida 4 ta kerak)</span>
+              </button>
+            )}
+
+            {/* Open Preset Library Button */}
+            <button
+              onClick={onOpenLibrary}
+              className="flex items-center gap-2 px-5 py-3.5 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 font-bold text-sm transition-all cursor-pointer shadow-xs"
+            >
+              <Compass className="w-4 h-4 text-indigo-500" />
+              <span>Tayyor to'plamlar</span>
+            </button>
+
+            <button
+              onClick={onOpenEditor}
+              className="flex items-center gap-2 px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold text-sm transition-all cursor-pointer"
+            >
+              <BookPlus className="w-4 h-4 text-slate-500" />
+              <span>Tahrirlash</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Right Column: Interactive Word Scramble Rack */}
+        <div className="lg:col-span-5">
+          <WordRack words={validWords} />
+        </div>
+      </section>
+
+      {/* Game Modes Categorized Grid */}
+      <section className="space-y-8">
+        {CATEGORIES.map(category => {
+          const modes = GAME_MODES.filter(m => m.category === category.id);
+          return (
+            <div key={category.id} className="space-y-3">
+              <h2 className="text-xl font-bold tracking-tight text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                <span className={`w-2.5 h-2.5 rounded-full bg-gradient-to-r ${category.color}`} />
+                {category.title}
+              </h2>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {modes.map(mode => (
+                  <button
+                    key={mode.id}
+                    disabled={!canPlay}
+                    onClick={() => onStartGame(mode.id)}
+                    className={`flex items-center gap-3.5 p-4 rounded-2xl border text-left transition-all ${
+                      canPlay
+                        ? 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-indigo-500 dark:hover:border-indigo-500 hover:shadow-md active:scale-98 cursor-pointer'
+                        : 'opacity-50 cursor-not-allowed bg-slate-50 dark:bg-slate-900 border-slate-100 dark:border-slate-800'
+                    }`}
+                  >
+                    <div className="flex-none p-3 rounded-xl bg-slate-100 dark:bg-slate-800">
+                      {getModeIcon(mode.id)}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="font-bold text-slate-900 dark:text-slate-100 text-base">
+                        {mode.name}
+                      </div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                        {mode.desc}
+                      </div>
+                    </div>
+                    <Play className="w-4 h-4 text-slate-300 dark:text-slate-600 group-hover:text-indigo-500" />
+                  </button>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </section>
+    </div>
+  );
+};
