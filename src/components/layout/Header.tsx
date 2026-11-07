@@ -33,48 +33,61 @@ export const Header: React.FC<HeaderProps> = ({
   onNavigate,
   onOpenLibrary,
 }) => {
-  const letters = ["S", "O'", "Z", "T", "O", "P"];
-
   return (
     <header className="flex items-center justify-between py-2.5 sm:py-3.5 px-3 sm:px-4 border-b border-slate-200 dark:border-slate-800 transition-colors w-full overflow-hidden">
-      {/* Left: Brand Logo (Adaptive: Compact text/tiles on mobile, full tiles on desktop) */}
-      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+      {/* Left: Brand Logo & Navigation Links (100% Unified Branding with Landing Page) */}
+      <div className="flex items-center gap-2 sm:gap-4 shrink-0">
         <button
           onClick={() => onNavigate('home')}
-          className="flex items-center gap-1 focus:outline-none group cursor-pointer"
+          className="flex items-center gap-2 focus:outline-none group cursor-pointer"
           aria-label="Bosh sahifaga qaytish"
         >
-          {/* Desktop/Tablet: 6 individual tiles */}
-          <div className="hidden sm:flex gap-1">
-            {letters.map((char, index) => (
-              <span
-                key={index}
-                className="inline-flex items-center justify-center w-7 h-9 sm:w-8 sm:h-10 rounded-lg bg-amber-400 dark:bg-amber-500 text-amber-950 font-black text-lg sm:text-xl shadow-[0_3px_0_#b45309] group-hover:scale-105 transition-transform"
-              >
-                {char}
-              </span>
-            ))}
-          </div>
-
-          {/* Mobile: Ultra-sleek compact brand logo that fits on any phone screen */}
-          <div className="flex sm:hidden items-center gap-1.5">
-            <span className="inline-flex items-center justify-center w-7 h-8 rounded-lg bg-amber-400 dark:bg-amber-500 text-amber-950 font-black text-sm shadow-[0_2px_0_#b45309]">
+          <div className="flex items-center -space-x-1">
+            <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-indigo-600 text-white font-black text-xs sm:text-sm flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
               S
             </span>
-            <span className="font-black text-lg tracking-tight text-slate-900 dark:text-white">
-              o'z<span className="text-amber-500">Top</span>
+            <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-violet-600 text-white font-black text-xs sm:text-sm flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+              O'
+            </span>
+            <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-pink-600 text-white font-black text-xs sm:text-sm flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+              Z
             </span>
           </div>
+          <span className="text-base sm:text-xl font-black tracking-tight text-slate-900 dark:text-white">
+            So'z<span className="text-indigo-600 dark:text-indigo-400">Top</span>
+          </span>
         </button>
 
-        {/* Quick Library Button (Desktop/Tablet) */}
-        <button
-          onClick={onOpenLibrary}
-          className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-indigo-600 dark:text-indigo-400 font-bold text-xs border border-indigo-200/60 dark:border-indigo-800/60 transition-all cursor-pointer shadow-xs"
-        >
-          <Compass className="w-3.5 h-3.5 text-indigo-500" />
-          <span>Kutubxona</span>
-        </button>
+        {/* Quick Navigation Tabs */}
+        <nav className="hidden md:flex items-center gap-1">
+          <button
+            onClick={() => onNavigate('home')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              currentView === 'home'
+                ? 'bg-slate-100 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            To'plamlarim
+          </button>
+          <button
+            onClick={onOpenLibrary}
+            className="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all cursor-pointer flex items-center gap-1.5"
+          >
+            <Compass className="w-3.5 h-3.5 text-indigo-500" />
+            <span>Kutubxona</span>
+          </button>
+          <button
+            onClick={() => onNavigate('achievements')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              currentView === 'achievements'
+                ? 'bg-slate-100 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            Yutuqlar
+          </button>
+        </nav>
       </div>
 
       {/* Right side: Stats, Settings, and Profile (100% Mobile Optimized, Zero Overflow) */}
