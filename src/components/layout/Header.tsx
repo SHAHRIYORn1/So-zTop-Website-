@@ -61,13 +61,13 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
 
           {/* Desktop Navigation Tabs (Visible on >= 768px) */}
-          <nav className="hidden md:flex items-center gap-1.5">
+          <nav className="hidden md:flex items-center p-1 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 gap-1">
             <button
               onClick={() => onNavigate('home')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 currentView === 'home' || currentView === 'editor'
-                  ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-500/20'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-indigo-600 text-white shadow-xs'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               <FolderOpen className="w-3.5 h-3.5" />
@@ -76,7 +76,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             <button
               onClick={onOpenLibrary}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-white/40 dark:hover:bg-slate-700/40"
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-500" />
               <span>Shablonlar</span>
@@ -86,8 +86,8 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={() => onNavigate('achievements')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 currentView === 'achievements'
-                  ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-500/20'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-indigo-600 text-white shadow-xs'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               <Trophy className="w-3.5 h-3.5" />
@@ -173,14 +173,14 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* Mobile Navigation Tabs (ALWAYS visible on mobile devices < 768px) */}
-      <nav className="flex md:hidden items-center justify-between gap-1.5 mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800/80 w-full">
+      {/* Mobile Navigation Bar (Segmented Pill, Seamless Dark/Light Colors) */}
+      <nav className="flex md:hidden items-center justify-between p-1 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 mt-2.5 w-full gap-1">
         <button
           onClick={() => onNavigate('home')}
-          className={`flex-1 py-2 px-2 rounded-xl text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer ${
+          className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer ${
             currentView === 'home' || currentView === 'editor'
               ? 'bg-indigo-600 text-white shadow-xs'
-              : 'bg-slate-100 dark:bg-slate-850 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
+              : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
           <FolderOpen className="w-3.5 h-3.5 shrink-0" />
@@ -189,7 +189,7 @@ export const Header: React.FC<HeaderProps> = ({
 
         <button
           onClick={onOpenLibrary}
-          className="flex-1 py-2 px-2 rounded-xl text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer bg-slate-100 dark:bg-slate-850 text-indigo-600 dark:text-indigo-400 hover:bg-slate-200"
+          className="flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-white/40 dark:hover:bg-slate-700/40"
         >
           <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0" />
           <span className="truncate">Shablonlar</span>
@@ -197,10 +197,10 @@ export const Header: React.FC<HeaderProps> = ({
 
         <button
           onClick={() => onNavigate('achievements')}
-          className={`flex-1 py-2 px-2 rounded-xl text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer ${
+          className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer ${
             currentView === 'achievements'
               ? 'bg-indigo-600 text-white shadow-xs'
-              : 'bg-slate-100 dark:bg-slate-850 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
+              : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
           <Trophy className="w-3.5 h-3.5 shrink-0" />

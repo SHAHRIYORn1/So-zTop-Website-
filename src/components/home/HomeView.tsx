@@ -273,15 +273,6 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   </button>
                 )}
 
-                {/* Open Preset Library Button */}
-                <button
-                  onClick={onOpenLibrary}
-                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 font-bold text-sm transition-all cursor-pointer shadow-xs"
-                >
-                  <Compass className="w-4 h-4 text-indigo-500" />
-                  <span>Kutubxona</span>
-                </button>
-
                 <button
                   onClick={onOpenEditor}
                   className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold text-sm transition-all cursor-pointer"
