@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { WordSet, GameModeId } from '../../types';
 import { GAME_MODES, CATEGORIES } from '../../data/gameModes';
 import { PRESET_TOPICS } from '../../data/presetLibrary';
@@ -30,6 +30,8 @@ import {
   Activity,
   Sparkles,
   ArrowRight,
+  ChevronDown,
+  Check,
 } from 'lucide-react';
 
 interface HomeViewProps {
@@ -75,6 +77,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
   onOpenEditor,
   onOpenLibrary,
 }) => {
+  const [isSetSwitcherOpen, setIsSetSwitcherOpen] = useState(false);
   const validWords = activeSet?.words ? activeSet.words.filter(w => w.w.trim().length > 0) : [];
   const canPlay = validWords.length >= 4;
 
@@ -184,24 +187,68 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 </div>
               </div>
 
-              {/* Quick set switcher */}
+              {/* Custom Quick Set Switcher (NO native browser select) */}
               {allSets.length > 1 && (
                 <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 w-full">
                   <label className="text-xs font-bold uppercase tracking-wider text-slate-400 shrink-0">
                     To'plamni almashtirish:
                   </label>
-                  <div className="relative w-full sm:w-auto flex-1 max-w-full">
-                    <select
-                      value={activeSet.id}
-                      onChange={e => onSelectSet(e.target.value)}
-                      className="w-full px-3 py-2.5 sm:py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 truncate cursor-pointer shadow-2xs"
+                  <div className="relative w-full sm:w-auto flex-1 max-w-sm">
+                    <button
+                      type="button"
+                      onClick={() => setIsSetSwitcherOpen(!isSetSwitcherOpen)}
+                      className="w-full flex items-center justify-between gap-2 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 hover:border-indigo-400 transition-all cursor-pointer shadow-2xs"
                     >
-                      {allSets.map(s => (
-                        <option key={s.id} value={s.id}>
-                          {s.name} ({s.words.length} ta so'z)
-                        </option>
-                      ))}
-                    </select>
+                      <div className="flex items-center gap-2 truncate">
+                        <span>📁</span>
+                        <span className="truncate">{activeSet.name}</span>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 shrink-0">
+                          {activeSet.words.length} ta
+                        </span>
+                      </div>
+                      <ChevronDown
+                        className={`w-4 h-4 text-slate-400 shrink-0 transition-transform ${
+                          isSetSwitcherOpen ? 'rotate-180 text-indigo-500' : ''
+                        }`}
+                      />
+                    </button>
+
+                    {isSetSwitcherOpen && (
+                      <>
+                        <div className="fixed inset-0 z-20" onClick={() => setIsSetSwitcherOpen(false)} />
+                        <div className="absolute top-full left-0 right-0 mt-1 max-h-60 overflow-y-auto rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xl py-1 z-30 animate-pop">
+                          {allSets.map(s => {
+                            const isSelected = s.id === activeSet.id;
+                            return (
+                              <button
+                                key={s.id}
+                                type="button"
+                                onClick={() => {
+                                  onSelectSet(s.id);
+                                  setIsSetSwitcherOpen(false);
+                                }}
+                                className={`w-full flex items-center justify-between px-3.5 py-2 text-xs font-bold transition-colors cursor-pointer ${
+                                  isSelected
+                                    ? 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400'
+                                    : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700/60'
+                                }`}
+                              >
+                                <div className="flex items-center gap-2 truncate pr-2">
+                                  <span>📁</span>
+                                  <span className="truncate">{s.name}</span>
+                                </div>
+                                <div className="flex items-center gap-2 shrink-0">
+                                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500">
+                                    {s.words.length} ta
+                                  </span>
+                                  {isSelected && <Check className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />}
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               )}

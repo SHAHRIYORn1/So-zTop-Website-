@@ -11,9 +11,9 @@ import {
   ArrowRight,
   ArrowLeft,
   BookOpen,
-  Layers,
-  Globe2,
-  Filter,
+  ChevronDown,
+  Check,
+  Sparkles,
 } from 'lucide-react';
 
 interface PresetLibraryModalProps {
@@ -22,6 +22,24 @@ interface PresetLibraryModalProps {
   onPlayDirectly: (newSet: WordSet) => void;
   onAddToMySets: (newSet: WordSet) => void;
 }
+
+const LANGUAGES = [
+  { id: 'en' as const, label: 'Inglizcha', flag: '🇬🇧', code: 'EN' },
+  { id: 'ru' as const, label: 'Ruscha', flag: '🇷🇺', code: 'RU' },
+  { id: 'de' as const, label: 'Nemischa', flag: '🇩🇪', code: 'DE' },
+];
+
+const CATEGORY_ICONS: Record<string, string> = {
+  all: '✨',
+  'Kundalik hayot': '👨‍👩‍👦',
+  'Taomlar va ichimliklar': '🍎',
+  'Kasblar va faoliyat': '💼',
+  "Ta'lim va fan": '🎓',
+  'Sayohat va transport': '✈️',
+  'IT va texnologiyalar': '💻',
+  'Sport va salomatlik': '⚽',
+  'Tabiat va hayvonlar': '🌿',
+};
 
 export const PresetLibraryModal: React.FC<PresetLibraryModalProps> = ({
   isOpen,
@@ -33,6 +51,10 @@ export const PresetLibraryModal: React.FC<PresetLibraryModalProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [activeTopic, setActiveTopic] = useState<PresetTopic | null>(null);
 
+  // Custom Dropdown Open States (NO browser-native select elements)
+  const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
+  const [isCatMenuOpen, setIsCatMenuOpen] = useState(false);
+
   if (!isOpen) return null;
 
   const categories = ['all', ...Array.from(new Set(PRESET_TOPICS.map(t => t.category)))];
@@ -40,6 +62,8 @@ export const PresetLibraryModal: React.FC<PresetLibraryModalProps> = ({
   const filteredTopics = PRESET_TOPICS.filter(
     t => selectedCategory === 'all' || t.category === selectedCategory
   );
+
+  const activeLangObj = LANGUAGES.find(l => l.id === selectedLang) || LANGUAGES[0];
 
   // Prepare preview words for selected topic
   const previewWords = activeTopic
@@ -62,26 +86,26 @@ export const PresetLibraryModal: React.FC<PresetLibraryModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/60 backdrop-blur-sm animate-pop">
       <div className="relative w-full max-w-4xl max-h-[90vh] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl flex flex-col overflow-hidden">
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex-none">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-100 dark:border-slate-800 flex-none">
           {activeTopic ? (
             /* Topic Active: Clean Back button in top-left */
             <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
               <button
                 onClick={() => setActiveTopic(null)}
-                className="p-2 sm:px-3 sm:py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer flex-none"
-                title="Barcha to'plamlarga qaytish"
+                className="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer flex-none"
+                title="Barcha shablonlarga qaytish"
               >
                 <ArrowLeft className="w-4 h-4 text-indigo-500" />
-                <span className="hidden sm:inline">Barcha to'plamlar</span>
+                <span className="hidden xs:inline">Shablonlar</span>
               </button>
 
               <div className="min-w-0">
-                <h2 className="text-base sm:text-xl font-black text-slate-900 dark:text-slate-100 truncate flex items-center gap-2">
-                  <span>{activeTopic.icon}</span>
+                <h2 className="text-sm sm:text-lg font-black text-slate-900 dark:text-slate-100 truncate flex items-center gap-1.5 sm:gap-2">
+                  <span className="text-xl sm:text-2xl">{activeTopic.icon}</span>
                   <span className="truncate">{activeTopic.name}</span>
                 </h2>
-                <p className="text-[11px] sm:text-xs text-slate-500 truncate">
-                  {previewWords.length} ta so'z • {selectedLang === 'en' ? 'Inglizcha' : selectedLang === 'ru' ? 'Ruscha' : 'Nemischa'}
+                <p className="text-[10px] sm:text-xs text-slate-500 truncate">
+                  {previewWords.length} ta so'z • {activeLangObj.label}
                 </p>
               </div>
             </div>
@@ -92,11 +116,12 @@ export const PresetLibraryModal: React.FC<PresetLibraryModalProps> = ({
                 <BookOpen className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
               <div>
-                <h2 className="text-base sm:text-xl font-black text-slate-900 dark:text-slate-100">
-                  Tayyor to'plamlar kutubxonasi
+                <h2 className="text-base sm:text-xl font-black text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                  <span>Tayyor shablonlar</span>
+                  <Sparkles className="w-4 h-4 text-amber-500" />
                 </h2>
                 <p className="text-[11px] sm:text-xs text-slate-500">
-                  Mavzuni tanlang, so'zlarini ko'ring va xohlagan o'yinda mashq qiling
+                  Kerakli til va mavzuni tanlang, to'plamga saqlang yoki darhol o'ynang
                 </p>
               </div>
             </div>
@@ -111,67 +136,169 @@ export const PresetLibraryModal: React.FC<PresetLibraryModalProps> = ({
           </button>
         </div>
 
-        {/* Compact Single-Row Filter Bar (Hidden when inside a topic) */}
+        {/* CUSTOM DROPDOWNS BAR (Single-Row, Pure Custom Components, Zero Browser Select) */}
         {!activeTopic && (
-          <div className="px-4 sm:px-6 py-2.5 sm:py-3 bg-slate-50 dark:bg-slate-950/40 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2.5 flex-none">
-            {/* Left: Language Dropdown/Select */}
-            <div className="flex-1 sm:flex-initial flex items-center gap-1.5">
-              <div className="relative w-full sm:w-auto">
-                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs">
-                  <Globe2 className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
-                  <span className="hidden xs:inline text-slate-400">Til:</span>
-                  <select
-                    value={selectedLang}
-                    onChange={e => setSelectedLang(e.target.value as any)}
-                    className="bg-transparent font-bold outline-none cursor-pointer pr-1"
-                  >
-                    <option value="en" className="dark:bg-slate-900">🇬🇧 Inglizcha</option>
-                    <option value="ru" className="dark:bg-slate-900">🇷🇺 Ruscha</option>
-                    <option value="de" className="dark:bg-slate-900">🇩🇪 Nemischa</option>
-                  </select>
-                </div>
-              </div>
+          <div className="px-4 sm:px-6 py-2.5 bg-slate-50/80 dark:bg-slate-950/40 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2 flex-none">
+            {/* Custom Language Dropdown (Tillar) */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsLangMenuOpen(!isLangMenuOpen);
+                  setIsCatMenuOpen(false);
+                }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-2xl border text-xs font-bold transition-all cursor-pointer shadow-2xs ${
+                  isLangMenuOpen
+                    ? 'border-indigo-500 ring-2 ring-indigo-500/20 bg-indigo-50/50 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400'
+                    : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 hover:border-indigo-400'
+                }`}
+                title="Tilni o'zgartirish"
+              >
+                <span className="text-sm">{activeLangObj.flag}</span>
+                <span className="font-extrabold">{activeLangObj.label}</span>
+                <ChevronDown
+                  className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${
+                    isLangMenuOpen ? 'rotate-180 text-indigo-500' : ''
+                  }`}
+                />
+              </button>
+
+              {/* Language Custom Popover Menu */}
+              {isLangMenuOpen && (
+                <>
+                  <div className="fixed inset-0 z-30" onClick={() => setIsLangMenuOpen(false)} />
+                  <div className="absolute top-full left-0 mt-1.5 w-48 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xl py-1.5 z-40 animate-pop">
+                    <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                      O'rganiladigan til
+                    </div>
+                    {LANGUAGES.map(lang => {
+                      const isSelected = selectedLang === lang.id;
+                      return (
+                        <button
+                          key={lang.id}
+                          type="button"
+                          onClick={() => {
+                            setSelectedLang(lang.id);
+                            setIsLangMenuOpen(false);
+                          }}
+                          className={`w-full flex items-center justify-between px-3.5 py-2 text-xs font-bold transition-colors cursor-pointer ${
+                            isSelected
+                              ? 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400'
+                              : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700/60'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className="text-base">{lang.flag}</span>
+                            <span>{lang.label}</span>
+                          </div>
+                          {isSelected && <Check className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
             </div>
 
-            {/* Right: Category Dropdown/Select with quick reset */}
-            <div className="flex-1 sm:flex-initial flex items-center gap-1.5">
-              <div className="relative w-full sm:w-auto">
-                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs">
-                  <Filter className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
-                  <span className="hidden xs:inline text-slate-400">Mavzu:</span>
-                  <select
-                    value={selectedCategory}
-                    onChange={e => setSelectedCategory(e.target.value)}
-                    className="bg-transparent font-bold outline-none cursor-pointer pr-1 max-w-[120px] xs:max-w-none truncate"
+            {/* Custom Type / Category Dropdown (Turi) */}
+            <div className="relative">
+              <div
+                className={`flex items-center rounded-2xl border transition-all shadow-2xs ${
+                  isCatMenuOpen
+                    ? 'border-indigo-500 ring-2 ring-indigo-500/20 bg-indigo-50/50 dark:bg-slate-800'
+                    : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-indigo-400'
+                }`}
+              >
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsCatMenuOpen(!isCatMenuOpen);
+                    setIsLangMenuOpen(false);
+                  }}
+                  className="flex items-center gap-1.5 px-3 py-1.5 sm:py-2 text-xs font-bold text-slate-800 dark:text-slate-100 cursor-pointer"
+                  title="Mavzu / Shablon turini tanlash"
+                >
+                  <span className="text-sm">{CATEGORY_ICONS[selectedCategory] || '🎯'}</span>
+                  <span className="max-w-[120px] xs:max-w-[160px] sm:max-w-[220px] truncate font-extrabold">
+                    {selectedCategory === 'all' ? 'Barcha turlar' : selectedCategory}
+                  </span>
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${
+                      isCatMenuOpen ? 'rotate-180 text-indigo-500' : ''
+                    }`}
+                  />
+                </button>
+
+                {/* Reset X button beside category name when a category is selected */}
+                {selectedCategory !== 'all' && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedCategory('all');
+                    }}
+                    className="p-1.5 mr-1 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/40 text-slate-400 hover:text-rose-500 transition-colors cursor-pointer"
+                    title="Barcha turlarga qaytarish"
                   >
-                    {categories.map(cat => (
-                      <option key={cat} value={cat} className="dark:bg-slate-900">
-                        {cat === 'all' ? "Barcha mavzular" : cat}
-                      </option>
-                    ))}
-                  </select>
-                  {selectedCategory !== 'all' && (
-                    <button
-                      type="button"
-                      onClick={() => setSelectedCategory('all')}
-                      className="p-0.5 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-400 hover:text-slate-700"
-                      title="Filtrni tozalash"
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
-                  )}
-                </div>
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
               </div>
+
+              {/* Category Custom Popover Menu */}
+              {isCatMenuOpen && (
+                <>
+                  <div className="fixed inset-0 z-30" onClick={() => setIsCatMenuOpen(false)} />
+                  <div className="absolute top-full right-0 mt-1.5 w-64 max-h-72 overflow-y-auto rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xl py-1.5 z-40 animate-pop">
+                    <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                      Mavzu / Shablon turi
+                    </div>
+                    {categories.map(cat => {
+                      const isSelected = selectedCategory === cat;
+                      const count =
+                        cat === 'all'
+                          ? PRESET_TOPICS.length
+                          : PRESET_TOPICS.filter(t => t.category === cat).length;
+                      return (
+                        <button
+                          key={cat}
+                          type="button"
+                          onClick={() => {
+                            setSelectedCategory(cat);
+                            setIsCatMenuOpen(false);
+                          }}
+                          className={`w-full flex items-center justify-between px-3.5 py-2 text-xs font-bold transition-colors cursor-pointer ${
+                            isSelected
+                              ? 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400'
+                              : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700/60'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2 truncate pr-2">
+                            <span className="text-sm">{CATEGORY_ICONS[cat] || '📁'}</span>
+                            <span className="truncate">{cat === 'all' ? 'Barcha turlar' : cat}</span>
+                          </div>
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 font-semibold">
+                              {count}
+                            </span>
+                            {isSelected && <Check className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
             </div>
           </div>
         )}
 
-        {/* Body content */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+        {/* Modal Body Content */}
+        <div className="flex-1 overflow-y-auto p-3.5 sm:p-6">
           {activeTopic ? (
-            /* Topic Detail View (inside topic) */
-            <div className="space-y-5">
-              {/* Action Buttons Bar: Spacious & Clean */}
+            /* Topic Detail View */
+            <div className="space-y-4 sm:space-y-5">
+              {/* Action Buttons Bar */}
               <div className="grid grid-cols-2 gap-2.5">
                 <button
                   onClick={() => handleAddSet(activeTopic)}
@@ -191,7 +318,7 @@ export const PresetLibraryModal: React.FC<PresetLibraryModalProps> = ({
               </div>
 
               {/* Topic Description Card */}
-              <div className="flex items-center gap-3.5 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
+              <div className="flex items-center gap-3.5 p-3.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
                 <div className="text-3xl sm:text-4xl shrink-0">{activeTopic.icon}</div>
                 <div>
                   <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100">
@@ -208,7 +335,7 @@ export const PresetLibraryModal: React.FC<PresetLibraryModalProps> = ({
                 {previewWords.map((item, idx) => (
                   <div
                     key={idx}
-                    className="flex items-center justify-between p-3 rounded-2xl bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700/80 shadow-xs hover:border-indigo-400 transition-colors group"
+                    className="flex items-center justify-between p-3 rounded-2xl bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700/80 shadow-2xs hover:border-indigo-400 transition-colors group"
                   >
                     <div className="min-w-0 pr-2">
                       <div className="font-bold text-sm text-slate-900 dark:text-slate-100 truncate">
@@ -230,13 +357,13 @@ export const PresetLibraryModal: React.FC<PresetLibraryModalProps> = ({
               </div>
             </div>
           ) : (
-            /* Topics Cards Grid */
+            /* Topics Grid */
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
               {filteredTopics.map(topic => (
                 <div
                   key={topic.id}
                   onClick={() => setActiveTopic(topic)}
-                  className="flex flex-col justify-between p-5 rounded-3xl bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/70 hover:border-indigo-500 dark:hover:border-indigo-500 hover:shadow-lg transition-all cursor-pointer group"
+                  className="flex flex-col justify-between p-4 sm:p-5 rounded-3xl bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/70 hover:border-indigo-500 dark:hover:border-indigo-500 hover:shadow-lg transition-all cursor-pointer group"
                 >
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
@@ -269,7 +396,7 @@ export const PresetLibraryModal: React.FC<PresetLibraryModalProps> = ({
                         e.stopPropagation();
                         handlePlayNow(topic);
                       }}
-                      className="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-600 hover:text-white transition-all cursor-pointer shadow-xs"
+                      className="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-600 hover:text-white transition-all cursor-pointer shadow-2xs"
                       title="Darhol o'ynash"
                     >
                       <Play className="w-3.5 h-3.5 fill-current" />
@@ -281,15 +408,15 @@ export const PresetLibraryModal: React.FC<PresetLibraryModalProps> = ({
           )}
         </div>
 
-        {/* Footer */}
+        {/* Modal Footer Info */}
         <div className="px-4 sm:px-6 py-3 bg-slate-50 dark:bg-slate-950/60 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 flex-none">
-          <span className="flex items-center gap-1.5">
-            <Layers className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
-            <span className="truncate">Jami {PRESET_TOPICS.length} ta mavzu va 300+ so'z</span>
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-500" />
+            <span>Kutubxonada {PRESET_TOPICS.length} ta mavzu va 300+ so'z mavjud</span>
+          </div>
           <button
             onClick={onClose}
-            className="font-bold hover:underline cursor-pointer shrink-0 ml-2"
+            className="font-bold hover:text-slate-900 dark:hover:text-white cursor-pointer"
           >
             Yopish
           </button>
