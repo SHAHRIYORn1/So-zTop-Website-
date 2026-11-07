@@ -37,22 +37,22 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col selection:bg-indigo-500 selection:text-white">
       {/* Sticky Header */}
       <header className="sticky top-0 z-40 bg-white/85 dark:bg-slate-900/85 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
           {/* Brand Logo */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <div className="flex items-center -space-x-1">
-              <span className="w-9 h-9 rounded-xl bg-indigo-600 text-white font-black text-base flex items-center justify-center shadow-lg shadow-indigo-600/30">
+              <span className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-indigo-600 text-white font-black text-sm sm:text-base flex items-center justify-center shadow-lg shadow-indigo-600/30">
                 S
               </span>
-              <span className="w-9 h-9 rounded-xl bg-violet-600 text-white font-black text-base flex items-center justify-center shadow-lg shadow-violet-600/30">
+              <span className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-violet-600 text-white font-black text-sm sm:text-base flex items-center justify-center shadow-lg shadow-violet-600/30">
                 O'
               </span>
-              <span className="w-9 h-9 rounded-xl bg-pink-600 text-white font-black text-base flex items-center justify-center shadow-lg shadow-pink-600/30">
+              <span className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-pink-600 text-white font-black text-sm sm:text-base flex items-center justify-center shadow-lg shadow-pink-600/30">
                 Z
               </span>
             </div>
             <div>
-              <span className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+              <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white">
                 So'z<span className="text-indigo-600 dark:text-indigo-400">Top</span>
               </span>
               <span className="hidden sm:inline-block ml-2 px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wider bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
@@ -61,19 +61,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </div>
           </div>
 
-          {/* Action buttons */}
-          <div className="flex items-center gap-2.5">
+          {/* Action buttons (Mobile: 1 sleek button; Desktop: both Kirish and Ro'yxatdan o'tish) */}
+          <div className="flex items-center gap-2">
             <button
               onClick={() => onOpenAuth('login')}
-              className="px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer shadow-sm"
             >
-              <LogIn className="w-4 h-4" />
+              <LogIn className="w-4 h-4 text-indigo-600" />
               <span>Kirish</span>
             </button>
 
             <button
               onClick={() => onOpenAuth('register')}
-              className="px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-black bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white shadow-lg shadow-indigo-600/30 transition-all flex items-center gap-1.5 cursor-pointer"
+              className="hidden sm:flex px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-black bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white shadow-lg shadow-indigo-600/30 transition-all items-center gap-1.5 cursor-pointer"
             >
               <UserPlus className="w-4 h-4" />
               <span>Ro'yxatdan o'tish</span>

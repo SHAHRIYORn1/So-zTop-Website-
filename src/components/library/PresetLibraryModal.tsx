@@ -52,16 +52,16 @@ export const PresetLibraryModal: React.FC<PresetLibraryModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/60 backdrop-blur-sm animate-pop">
       <div className="relative w-full max-w-4xl max-h-[90vh] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 dark:border-slate-800 flex-none">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
-              <BookOpen className="w-6 h-6" />
+        <div className="flex items-center justify-between px-4 sm:px-6 py-4 sm:py-5 border-b border-slate-100 dark:border-slate-800 flex-none">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <div className="p-2 sm:p-2.5 rounded-2xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex-none">
+              <BookOpen className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
             <div>
-              <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100">
+              <h2 className="text-lg sm:text-2xl font-black text-slate-900 dark:text-slate-100">
                 Tayyor to'plamlar kutubxonasi
               </h2>
-              <p className="text-xs sm:text-sm text-slate-500">
+              <p className="text-[11px] sm:text-sm text-slate-500">
                 Mavzuni tanlang, so'zlarini ko'ring va xohlagan o'yinda mashq qiling
               </p>
             </div>
@@ -69,23 +69,23 @@ export const PresetLibraryModal: React.FC<PresetLibraryModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-2.5 rounded-2xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+            className="p-2 sm:p-2.5 rounded-2xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer flex-none ml-2"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Language selector & Category bar */}
-        <div className="px-6 py-4 bg-slate-50 dark:bg-slate-950/40 border-b border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-4 flex-none">
+        {/* Language selector & Category bar (Responsive & Mobile-optimized) */}
+        <div className="px-4 sm:px-6 py-3 sm:py-4 bg-slate-50 dark:bg-slate-950/40 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 flex-none">
           {/* Target Language Toggle */}
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+          <div className="flex flex-col xs:flex-row xs:items-center gap-1.5 xs:gap-2.5 w-full sm:w-auto">
+            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-400 flex-none">
               O'rganiladigan til:
             </span>
-            <div className="flex bg-slate-200/80 dark:bg-slate-800 p-1 rounded-xl">
+            <div className="grid grid-cols-3 xs:flex bg-slate-200/80 dark:bg-slate-800 p-1 rounded-xl w-full xs:w-auto">
               <button
                 onClick={() => setSelectedLang('en')}
-                className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                className={`px-2 sm:px-3 py-1.5 sm:py-1 rounded-lg text-xs font-bold transition-all cursor-pointer text-center whitespace-nowrap ${
                   selectedLang === 'en'
                     ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 shadow-sm'
                     : 'text-slate-600 dark:text-slate-400'
@@ -95,7 +95,7 @@ export const PresetLibraryModal: React.FC<PresetLibraryModalProps> = ({
               </button>
               <button
                 onClick={() => setSelectedLang('ru')}
-                className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                className={`px-2 sm:px-3 py-1.5 sm:py-1 rounded-lg text-xs font-bold transition-all cursor-pointer text-center whitespace-nowrap ${
                   selectedLang === 'ru'
                     ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 shadow-sm'
                     : 'text-slate-600 dark:text-slate-400'
@@ -105,7 +105,7 @@ export const PresetLibraryModal: React.FC<PresetLibraryModalProps> = ({
               </button>
               <button
                 onClick={() => setSelectedLang('de')}
-                className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                className={`px-2 sm:px-3 py-1.5 sm:py-1 rounded-lg text-xs font-bold transition-all cursor-pointer text-center whitespace-nowrap ${
                   selectedLang === 'de'
                     ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 shadow-sm'
                     : 'text-slate-600 dark:text-slate-400'
@@ -122,13 +122,13 @@ export const PresetLibraryModal: React.FC<PresetLibraryModalProps> = ({
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-3 py-1 rounded-full text-xs font-bold transition-all flex-none cursor-pointer ${
+                className={`px-3 py-1 rounded-full text-xs font-bold transition-all flex-none cursor-pointer whitespace-nowrap ${
                   selectedCategory === cat
                     ? 'bg-indigo-600 text-white shadow-sm'
                     : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-400'
                 }`}
               >
-                {cat === 'all' ? 'Barcha to\'plamlar' : cat}
+                {cat === 'all' ? "Barcha to'plamlar" : cat}
               </button>
             ))}
           </div>
