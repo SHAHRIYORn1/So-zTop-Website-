@@ -32,10 +32,30 @@ const getSavedUser = () => {
   }
 };
 
-const cleanSetsList = (arr: any): WordSet[] => {
+const getDeletedSetIds = (username: string): Set<string> => {
+  if (!username) return new Set();
+  try {
+    const saved = localStorage.getItem(`soztop_deleted_sets_${username}`);
+    return saved ? new Set(JSON.parse(saved)) : new Set();
+  } catch {
+    return new Set();
+  }
+};
+
+const markSetAsDeleted = (username: string, id: string) => {
+  if (!username || !id) return;
+  try {
+    const set = getDeletedSetIds(username);
+    set.add(id);
+    localStorage.setItem(`soztop_deleted_sets_${username}`, JSON.stringify([...set]));
+  } catch {}
+};
+
+const cleanSetsList = (arr: any, username = ''): WordSet[] => {
   if (!Array.isArray(arr)) return [];
-  // Qat'iy hech qanday eski default 3 ta toplam ('s1', 's2', 's3') qo'shilmaydi
-  return arr.filter(s => s && s.id && !['s1', 's2', 's3'].includes(s.id));
+  const deleted = getDeletedSetIds(username);
+  // Qat'iy hech qanday eski default 3 ta toplam ('s1', 's2', 's3') yoki o'chirilgan to'plamlar qo'shilmaydi
+  return arr.filter(s => s && s.id && !['s1', 's2', 's3'].includes(s.id) && !deleted.has(s.id));
 };
 
 export function useAppStore() {
@@ -63,7 +83,7 @@ export function useAppStore() {
     if (!initialUsername) return [];
     try {
       const saved = localStorage.getItem(`soztop_sets_${initialUsername}`);
-      if (saved) return cleanSetsList(JSON.parse(saved));
+      if (saved) return cleanSetsList(JSON.parse(saved), initialUsername);
       // Yangi foydalanuvchi doimo 0 ta to'plam bilan boshlaydi
       return [];
     } catch {
@@ -122,7 +142,7 @@ export function useAppStore() {
     try {
       const savedSets = localStorage.getItem(userSetsKey);
       if (savedSets) {
-        const parsedSets = cleanSetsList(JSON.parse(savedSets));
+        const parsedSets = cleanSetsList(JSON.parse(savedSets), cleanUsername);
         setSets(parsedSets);
         localStorage.setItem(userSetsKey, JSON.stringify(parsedSets));
         const savedActive = localStorage.getItem(userActiveKey);
@@ -170,7 +190,7 @@ export function useAppStore() {
 
     // 1. Sync sets: If server has sets, use them, otherwise preserve local
     if (serverSets && serverSets.length > 0) {
-      const cleaned = cleanSetsList(serverSets);
+      const cleaned = cleanSetsList(serverSets, cleanUsername);
       setSets(cleaned);
       localStorage.setItem(userSetsKey, JSON.stringify(cleaned));
       const savedActive = localStorage.getItem(userActiveKey);
@@ -179,7 +199,7 @@ export function useAppStore() {
     } else {
       const savedSets = localStorage.getItem(userSetsKey);
       if (savedSets) {
-        const parsed = cleanSetsList(JSON.parse(savedSets));
+        const parsed = cleanSetsList(JSON.parse(savedSets), cleanUsername);
         setSets(parsed);
         if (parsed.length > 0) {
           api.syncSets(parsed).catch(() => {});
@@ -306,9 +326,19 @@ export function useAppStore() {
   };
 
   const addWordSet = (newSet: WordSet) => {
+    const targetUser = currentUserKey || getSavedUser()?.username?.trim()?.toLowerCase();
+    if (targetUser) {
+      try {
+        const deleted = getDeletedSetIds(targetUser);
+        if (deleted.has(newSet.id)) {
+          deleted.delete(newSet.id);
+          localStorage.setItem(`soztop_deleted_sets_${targetUser}`, JSON.stringify([...deleted]));
+        }
+      } catch {}
+    }
+
     setSets(prev => {
       const nextSets = [newSet, ...prev];
-      const targetUser = currentUserKey || getSavedUser()?.username?.trim()?.toLowerCase();
       if (targetUser) {
         localStorage.setItem(`soztop_sets_${targetUser}`, JSON.stringify(nextSets));
         localStorage.setItem(`soztop_active_${targetUser}`, newSet.id);
@@ -321,9 +351,13 @@ export function useAppStore() {
   };
 
   const deleteWordSet = (id: string) => {
+    const targetUser = currentUserKey || getSavedUser()?.username?.trim()?.toLowerCase();
+    if (targetUser) {
+      markSetAsDeleted(targetUser, id);
+    }
+
     setSets(prev => {
       const filtered = prev.filter(s => s.id !== id);
-      const targetUser = currentUserKey || getSavedUser()?.username?.trim()?.toLowerCase();
       if (targetUser) {
         localStorage.setItem(`soztop_sets_${targetUser}`, JSON.stringify(filtered));
         // Auto-sync both syncSets and direct delete endpoint!
