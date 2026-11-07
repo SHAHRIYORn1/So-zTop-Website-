@@ -277,18 +277,21 @@ export const WordSetEditor: React.FC<WordSetEditorProps> = ({
             </button>
           </div>
 
-          {/* Delete set option */}
-          {sets.length > 1 && (
-            <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
-              <button
-                onClick={() => onDeleteSet(activeSet.id)}
-                className="text-xs font-semibold text-rose-500 hover:text-rose-700 flex items-center gap-1.5 cursor-pointer"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-                <span>To'plamni butunlay o'chirish</span>
-              </button>
-            </div>
-          )}
+          {/* Delete set option (Always available for any set) */}
+          <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+            <button
+              onClick={() => {
+                if (window.confirm(`"${activeSet.name}" to'plamini haqiqatan ham butunlay o'chirmoqchimisiz?`)) {
+                  onDeleteSet(activeSet.id);
+                  onBack();
+                }
+              }}
+              className="px-3 py-2 rounded-xl text-xs font-bold text-rose-500 hover:text-white hover:bg-rose-500 border border-rose-200 dark:border-rose-900/60 transition-colors flex items-center gap-1.5 cursor-pointer"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>To'plamni butunlay o'chirish</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -243,6 +243,7 @@ export function App() {
               onStartGame={handleStartGameSetup}
               onOpenEditor={() => setCurrentView('editor')}
               onOpenLibrary={() => setIsLibraryOpen(true)}
+              onDeleteSet={handleDeleteWordSet}
             />
           )}
 

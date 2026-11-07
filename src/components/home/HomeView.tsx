@@ -30,6 +30,7 @@ import {
   Activity,
   Sparkles,
   ArrowRight,
+  Trash2,
 } from 'lucide-react';
 
 interface HomeViewProps {
@@ -39,6 +40,7 @@ interface HomeViewProps {
   onStartGame: (modeId: GameModeId | '?') => void;
   onOpenEditor: () => void;
   onOpenLibrary: () => void;
+  onDeleteSet?: (id: string) => void;
 }
 
 // Icon mapper for game modes
@@ -74,6 +76,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
   onStartGame,
   onOpenEditor,
   onOpenLibrary,
+  onDeleteSet,
 }) => {
   const validWords = activeSet?.words ? activeSet.words.filter(w => w.w.trim().length > 0) : [];
   const canPlay = validWords.length >= 4;
@@ -242,6 +245,21 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   <BookPlus className="w-4 h-4 text-slate-500" />
                   <span>Tahrirlash</span>
                 </button>
+
+                {onDeleteSet && (
+                  <button
+                    onClick={() => {
+                      if (window.confirm(`"${activeSet.name}" to'plamini o'chirmoqchimisiz?`)) {
+                        onDeleteSet(activeSet.id);
+                      }
+                    }}
+                    className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-3.5 rounded-2xl border border-rose-200 dark:border-rose-900/60 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-rose-600 dark:text-rose-400 font-semibold text-sm transition-all cursor-pointer"
+                    title="To'plamni o'chirish"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    <span>O'chirish</span>
+                  </button>
+                )}
               </div>
             </div>
 

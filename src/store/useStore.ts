@@ -326,7 +326,8 @@ export function useAppStore() {
       const targetUser = currentUserKey || getSavedUser()?.username?.trim()?.toLowerCase();
       if (targetUser) {
         localStorage.setItem(`soztop_sets_${targetUser}`, JSON.stringify(filtered));
-        // Auto-sync in background!
+        // Auto-sync both syncSets and direct delete endpoint!
+        api.deleteSet(id).catch(() => {});
         api.syncSets(filtered).catch(() => {});
       }
       if (activeSetId === id) {

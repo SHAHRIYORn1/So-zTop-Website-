@@ -141,6 +141,23 @@ export const api = {
     }
   },
 
+  async deleteSet(id: string): Promise<boolean> {
+    const token = this.getToken();
+    if (!token) return false;
+
+    try {
+      const res = await fetch(`${API_BASE}/api/sets/${id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return res.ok;
+    } catch {
+      return false;
+    }
+  },
+
   async syncStats(stats: UserStats): Promise<boolean> {
     const token = this.getToken();
     if (!token) return false;
