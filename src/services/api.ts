@@ -98,6 +98,22 @@ export const api = {
     return data.user;
   },
 
+  async getSets(): Promise<WordSet[]> {
+    const token = this.getToken();
+    if (!token) return [];
+
+    try {
+      const res = await fetch(`${API_BASE}/api/sets`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) return [];
+      const data = await res.json();
+      return data.sets || [];
+    } catch {
+      return [];
+    }
+  },
+
   async syncSets(sets: WordSet[]): Promise<boolean> {
     const token = this.getToken();
     if (!token) return false;

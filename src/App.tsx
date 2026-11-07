@@ -19,6 +19,7 @@ export function App() {
     userName,
     userAvatar,
     loadUserContext,
+    syncWithServerData,
     resetUserContext,
     updateProfile,
     soundEnabled,
@@ -63,7 +64,8 @@ export function App() {
         if (res && res.user) {
           setAuthUser(res.user);
           localStorage.setItem('soztop_user', JSON.stringify(res.user));
-          loadUserContext(res.user.username, res.user.full_name, res.user.avatar);
+          const serverSets = await api.getSets();
+          syncWithServerData(res.user, res.stats, serverSets);
         }
       } catch (err) {
         console.warn('Backend connection check:', err);
@@ -74,10 +76,15 @@ export function App() {
     }
   }, []);
 
-  const handleAuthSuccess = (user: AuthUser) => {
+  const handleAuthSuccess = async (user: AuthUser) => {
     setAuthUser(user);
     localStorage.setItem('soztop_user', JSON.stringify(user));
-    loadUserContext(user.username, user.full_name, user.avatar);
+    try {
+      const [meRes, serverSets] = await Promise.all([api.getMe(), api.getSets()]);
+      syncWithServerData(user, meRes?.stats, serverSets);
+    } catch {
+      loadUserContext(user.username, user.full_name, user.avatar);
+    }
     setIsAuthOpen(false);
     setCurrentView('home');
     addToast(`Xush kelibsiz, ${user.full_name}!`, 'success');
@@ -121,9 +128,6 @@ export function App() {
     setActiveGameMode(null);
     setFilteredGameWords(null);
     setCurrentView('home');
-    if (authUser) {
-      api.syncStats(stats);
-    }
   };
 
   const handleDeleteWordSet = (id: string) => {

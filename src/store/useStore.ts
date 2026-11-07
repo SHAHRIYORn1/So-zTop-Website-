@@ -153,6 +153,91 @@ export function useAppStore() {
     }
   }, []);
 
+  // Sync complete state with server cloud data (guarantees cross-device & cross-tab persistent sync)
+  const syncWithServerData = useCallback((
+    serverUser: { username: string; full_name?: string; avatar?: string },
+    serverStats?: any,
+    serverSets?: WordSet[]
+  ) => {
+    const cleanUsername = serverUser.username.trim().toLowerCase();
+    setCurrentUserKey(cleanUsername);
+    setUserName(serverUser.full_name || cleanUsername);
+    setUserAvatar(serverUser.avatar || '🦁');
+
+    const userSetsKey = `soztop_sets_${cleanUsername}`;
+    const userActiveKey = `soztop_active_${cleanUsername}`;
+    const userStatsKey = `soztop_stats_${cleanUsername}`;
+
+    // 1. Sync sets: If server has sets, use them, otherwise preserve local
+    if (serverSets && serverSets.length > 0) {
+      const cleaned = cleanSetsList(serverSets);
+      setSets(cleaned);
+      localStorage.setItem(userSetsKey, JSON.stringify(cleaned));
+      const savedActive = localStorage.getItem(userActiveKey);
+      const activeValid = cleaned.some(s => s.id === savedActive);
+      setActiveSetId(activeValid ? savedActive! : cleaned[0]?.id || '');
+    } else {
+      const savedSets = localStorage.getItem(userSetsKey);
+      if (savedSets) {
+        const parsed = cleanSetsList(JSON.parse(savedSets));
+        setSets(parsed);
+        if (parsed.length > 0) {
+          api.syncSets(parsed).catch(() => {});
+        }
+      } else {
+        setSets([]);
+        setActiveSetId('');
+      }
+    }
+
+    // 2. Sync stats: Accumulate and merge to guarantee progress is NEVER lost across devices
+    let localStats: UserStats = getEmptyStats();
+    try {
+      const saved = localStorage.getItem(userStatsKey);
+      if (saved) localStats = JSON.parse(saved);
+    } catch {}
+
+    const allModeKeys = new Set([
+      ...Object.keys(serverStats?.played_modes || {}),
+      ...Object.keys(localStats.playedModes || {}),
+    ]);
+    const mergedModes: Record<string, number> = {};
+    allModeKeys.forEach(k => {
+      mergedModes[k] = Math.max(
+        serverStats?.played_modes?.[k] || 0,
+        localStats.playedModes?.[k] || 0
+      );
+    });
+
+    const allWords = new Set([
+      ...Object.keys(serverStats?.known_words || {}),
+      ...Object.keys(localStats.knownWords || {}),
+    ]);
+    const mergedWords: Record<string, number> = {};
+    allWords.forEach(w => {
+      mergedWords[w] = Math.max(
+        serverStats?.known_words?.[w] || 0,
+        localStats.knownWords?.[w] || 0
+      );
+    });
+
+    const mergedStats: UserStats = {
+      stars: Math.max(serverStats?.stars || 0, localStats.stars || 0),
+      games: Math.max(serverStats?.games || 0, localStats.games || 0),
+      perfect: Math.max(serverStats?.perfect || 0, localStats.perfect || 0),
+      streak: Math.max(serverStats?.streak || 0, localStats.streak || 0),
+      best: Math.max(serverStats?.best || 0, localStats.best || 0, serverStats?.streak || 0, localStats.streak || 0),
+      lastDate: serverStats?.lastDate || localStats.lastDate || getTodayString(),
+      playedModes: mergedModes,
+      knownWords: mergedWords,
+      unlockedBadges: { ...(serverStats?.unlocked_badges || {}), ...(localStats.unlockedBadges || {}) },
+    };
+
+    setStats(mergedStats);
+    localStorage.setItem(userStatsKey, JSON.stringify(mergedStats));
+    api.syncStats(mergedStats).catch(() => {});
+  }, []);
+
   // Clear account data on logout
   const resetUserContext = useCallback(() => {
     setCurrentUserKey('');
@@ -210,8 +295,9 @@ export function useAppStore() {
   const updateWordSet = (updated: WordSet) => {
     setSets(prev => {
       const nextSets = prev.map(s => (s.id === updated.id ? updated : s));
-      if (currentUserKey) {
-        localStorage.setItem(`soztop_sets_${currentUserKey}`, JSON.stringify(nextSets));
+      const targetUser = currentUserKey || getSavedUser()?.username?.trim()?.toLowerCase();
+      if (targetUser) {
+        localStorage.setItem(`soztop_sets_${targetUser}`, JSON.stringify(nextSets));
         // Auto-sync in background!
         api.syncSets(nextSets).catch(() => {});
       }
@@ -222,9 +308,10 @@ export function useAppStore() {
   const addWordSet = (newSet: WordSet) => {
     setSets(prev => {
       const nextSets = [newSet, ...prev];
-      if (currentUserKey) {
-        localStorage.setItem(`soztop_sets_${currentUserKey}`, JSON.stringify(nextSets));
-        localStorage.setItem(`soztop_active_${currentUserKey}`, newSet.id);
+      const targetUser = currentUserKey || getSavedUser()?.username?.trim()?.toLowerCase();
+      if (targetUser) {
+        localStorage.setItem(`soztop_sets_${targetUser}`, JSON.stringify(nextSets));
+        localStorage.setItem(`soztop_active_${targetUser}`, newSet.id);
         // Auto-sync in background!
         api.syncSets(nextSets).catch(() => {});
       }
@@ -236,16 +323,17 @@ export function useAppStore() {
   const deleteWordSet = (id: string) => {
     setSets(prev => {
       const filtered = prev.filter(s => s.id !== id);
-      if (currentUserKey) {
-        localStorage.setItem(`soztop_sets_${currentUserKey}`, JSON.stringify(filtered));
+      const targetUser = currentUserKey || getSavedUser()?.username?.trim()?.toLowerCase();
+      if (targetUser) {
+        localStorage.setItem(`soztop_sets_${targetUser}`, JSON.stringify(filtered));
         // Auto-sync in background!
         api.syncSets(filtered).catch(() => {});
       }
       if (activeSetId === id) {
         const nextActive = filtered[0]?.id || '';
         setActiveSetId(nextActive);
-        if (currentUserKey) {
-          localStorage.setItem(`soztop_active_${currentUserKey}`, nextActive);
+        if (targetUser) {
+          localStorage.setItem(`soztop_active_${targetUser}`, nextActive);
         }
       }
       return filtered;
@@ -306,8 +394,9 @@ export function useAppStore() {
       nextStats.unlockedBadges = unlocked;
 
       // INSTANT localStorage write so F5 NEVER loses stars!
-      if (currentUserKey) {
-        localStorage.setItem(`soztop_stats_${currentUserKey}`, JSON.stringify(nextStats));
+      const targetUser = currentUserKey || getSavedUser()?.username?.trim()?.toLowerCase();
+      if (targetUser) {
+        localStorage.setItem(`soztop_stats_${targetUser}`, JSON.stringify(nextStats));
         // AUTO-SYNC to backend in background!
         api.syncStats(nextStats).catch(() => {});
       }
@@ -321,6 +410,7 @@ export function useAppStore() {
   return {
     currentUserKey,
     loadUserContext,
+    syncWithServerData,
     resetUserContext,
     userName,
     userAvatar,
