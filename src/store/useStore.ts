@@ -32,6 +32,12 @@ const getSavedUser = () => {
   }
 };
 
+const cleanSetsList = (arr: any): WordSet[] => {
+  if (!Array.isArray(arr)) return [];
+  // Qat'iy hech qanday eski default 3 ta toplam ('s1', 's2', 's3') qo'shilmaydi
+  return arr.filter(s => s && s.id && !['s1', 's2', 's3'].includes(s.id));
+};
+
 export function useAppStore() {
   const initialUser = getSavedUser();
   const initialUsername = initialUser?.username ? initialUser.username.trim().toLowerCase() : '';
@@ -57,8 +63,8 @@ export function useAppStore() {
     if (!initialUsername) return [];
     try {
       const saved = localStorage.getItem(`soztop_sets_${initialUsername}`);
-      if (saved) return JSON.parse(saved);
-      // New user starts completely fresh with 0 sets
+      if (saved) return cleanSetsList(JSON.parse(saved));
+      // Yangi foydalanuvchi doimo 0 ta to'plam bilan boshlaydi
       return [];
     } catch {
       return [];
@@ -70,7 +76,7 @@ export function useAppStore() {
     if (!initialUsername) return '';
     try {
       const saved = localStorage.getItem(`soztop_active_${initialUsername}`);
-      if (saved) return saved;
+      if (saved && !['s1', 's2', 's3'].includes(saved)) return saved;
       return '';
     } catch {
       return '';
@@ -112,16 +118,18 @@ export function useAppStore() {
     const userActiveKey = `soztop_active_${cleanUsername}`;
     const userStatsKey = `soztop_stats_${cleanUsername}`;
 
-    // Read sets
+    // Read sets - strictly 0 sets for new users or clean legacy sets
     try {
       const savedSets = localStorage.getItem(userSetsKey);
       if (savedSets) {
-        const parsedSets = JSON.parse(savedSets);
+        const parsedSets = cleanSetsList(JSON.parse(savedSets));
         setSets(parsedSets);
+        localStorage.setItem(userSetsKey, JSON.stringify(parsedSets));
         const savedActive = localStorage.getItem(userActiveKey);
-        setActiveSetId(savedActive || parsedSets[0]?.id || '');
+        const activeValid = parsedSets.some(s => s.id === savedActive);
+        setActiveSetId(activeValid ? savedActive! : parsedSets[0]?.id || '');
       } else {
-        // New user starts clean with 0 sets
+        // Yangi foydalanuvchi doimo 0 ta to'plam bilan boshlaydi
         setSets([]);
         setActiveSetId('');
       }

@@ -7,18 +7,31 @@ interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   onAuthSuccess: (user: AuthUser) => void;
+  initialTab?: 'login' | 'register';
 }
 
 const AVATARS = ['🦁', '🦊', '🚀', '⚡', '👑', '🦉', '🎓', '🐬', '🐼', '🐯', '🌟', '🎯'];
 
-export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuccess }) => {
-  const [tab, setTab] = useState<'login' | 'register'>('login');
+export const AuthModal: React.FC<AuthModalProps> = ({
+  isOpen,
+  onClose,
+  onAuthSuccess,
+  initialTab = 'login',
+}) => {
+  const [tab, setTab] = useState<'login' | 'register'>(initialTab);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [selectedAvatar, setSelectedAvatar] = useState('🦁');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setTab(initialTab);
+      setError(null);
+    }
+  }, [isOpen, initialTab]);
 
   if (!isOpen) return null;
 

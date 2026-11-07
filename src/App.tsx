@@ -53,6 +53,7 @@ export function App() {
   const [filteredGameWords, setFilteredGameWords] = useState<WordItem[] | null>(null);
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [authTab, setAuthTab] = useState<'login' | 'register'>('login');
 
   // Sync with backend on mount if token exists
   useEffect(() => {
@@ -94,9 +95,15 @@ export function App() {
   };
 
   const handleStartGameSetup = (modeId: GameModeId | '?') => {
+    // Toplamsiz o'yin o'ynamoqchi bo'lsa xabar chiqarish va to'plam qo'shishga yo'naltirish
+    if (sets.length === 0) {
+      addToast("O'yin o'ynash uchun avval to'plam qo'shing!", 'error');
+      setIsLibraryOpen(true);
+      return;
+    }
     const validWords = activeSet.words.filter(w => w.w.trim() && w.tr?.trim());
     if (validWords.length < 4) {
-      addToast("O'yin uchun kamida 4 ta so'zli to'plam bo'lishi kerak! To'plam yarating yoki qo'shing", 'error');
+      addToast("O'yin o'ynash uchun kamida 4 ta so'z kerak! Avval to'plamga so'z qo'shing.", 'error');
       setCurrentView('editor');
       return;
     }
@@ -145,11 +152,18 @@ export function App() {
     return (
       <>
         <LandingPage
-          onOpenAuth={() => setIsAuthOpen(true)}
-          onOpenLibrary={() => setIsAuthOpen(true)}
+          onOpenAuth={(tab = 'login') => {
+            setAuthTab(tab);
+            setIsAuthOpen(true);
+          }}
+          onOpenLibrary={() => {
+            setAuthTab('login');
+            setIsAuthOpen(true);
+          }}
         />
         <AuthModal
           isOpen={isAuthOpen}
+          initialTab={authTab}
           onClose={() => setIsAuthOpen(false)}
           onAuthSuccess={handleAuthSuccess}
         />
