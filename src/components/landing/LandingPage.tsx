@@ -5,16 +5,22 @@ import {
   UserPlus,
   ChevronRight,
   ArrowRight,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import { GAME_MODES } from '../../data/gameModes';
 
 interface LandingPageProps {
   onOpenAuth: (defaultTab?: 'login' | 'register') => void;
   onOpenLibrary: () => void;
+  isDark?: boolean;
+  onToggleTheme?: () => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({
   onOpenAuth,
+  isDark,
+  onToggleTheme,
 }) => {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
 
@@ -63,6 +69,20 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
           {/* Action buttons (Mobile: 1 sleek button; Desktop: both Kirish and Ro'yxatdan o'tish) */}
           <div className="flex items-center gap-2">
+            {onToggleTheme && (
+              <button
+                onClick={onToggleTheme}
+                className="p-2 sm:p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors cursor-pointer shadow-sm"
+                title={isDark ? "Yorug' rejim" : "Qorong'i rejim"}
+              >
+                {isDark ? (
+                  <Sun className="w-4 h-4 text-amber-400" />
+                ) : (
+                  <Moon className="w-4 h-4 text-slate-600 dark:text-slate-300" />
+                )}
+              </button>
+            )}
+
             <button
               onClick={() => onOpenAuth('login')}
               className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer shadow-sm"

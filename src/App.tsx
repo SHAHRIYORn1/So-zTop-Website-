@@ -195,6 +195,8 @@ export function App() {
             setAuthTab('login');
             setIsAuthOpen(true);
           }}
+          isDark={isDark}
+          onToggleTheme={toggleTheme}
         />
         <AuthModal
           isOpen={isAuthOpen}
