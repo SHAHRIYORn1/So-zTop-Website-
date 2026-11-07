@@ -103,6 +103,15 @@ export function useAppStore() {
     }
   });
 
+  // Persistent active set selector that writes to localStorage
+  const selectActiveSetId = useCallback((id: string) => {
+    setActiveSetId(id);
+    const targetUser = currentUserKey || getSavedUser()?.username?.trim()?.toLowerCase();
+    if (targetUser && id) {
+      localStorage.setItem(`soztop_active_${targetUser}`, id);
+    }
+  }, [currentUserKey]);
+
   // 5. Stats state (Directly initialized from localStorage with username key)
   const [stats, setStats] = useState<UserStats>(() => {
     if (!initialUsername) return getEmptyStats();
@@ -146,8 +155,11 @@ export function useAppStore() {
         setSets(parsedSets);
         localStorage.setItem(userSetsKey, JSON.stringify(parsedSets));
         const savedActive = localStorage.getItem(userActiveKey);
-        const activeValid = parsedSets.some(s => s.id === savedActive);
-        setActiveSetId(activeValid ? savedActive! : parsedSets[0]?.id || '');
+        setActiveSetId(prev => {
+          if (prev && parsedSets.some(s => s.id === prev)) return prev;
+          if (savedActive && parsedSets.some(s => s.id === savedActive)) return savedActive;
+          return parsedSets[0]?.id || '';
+        });
       } else {
         // Yangi foydalanuvchi doimo 0 ta to'plam bilan boshlaydi
         setSets([]);
@@ -194,8 +206,17 @@ export function useAppStore() {
       setSets(cleaned);
       localStorage.setItem(userSetsKey, JSON.stringify(cleaned));
       const savedActive = localStorage.getItem(userActiveKey);
-      const activeValid = cleaned.some(s => s.id === savedActive);
-      setActiveSetId(activeValid ? savedActive! : cleaned[0]?.id || '');
+
+      // PRESERVE CURRENT USER SELECTION! Never auto-switch if set exists!
+      setActiveSetId(prev => {
+        if (prev && cleaned.some(s => s.id === prev)) {
+          return prev; // KEEP user's current selection!
+        }
+        if (savedActive && cleaned.some(s => s.id === savedActive)) {
+          return savedActive;
+        }
+        return cleaned[0]?.id || '';
+      });
     } else {
       const savedSets = localStorage.getItem(userSetsKey);
       if (savedSets) {
@@ -204,6 +225,12 @@ export function useAppStore() {
         if (parsed.length > 0) {
           api.syncSets(parsed).catch(() => {});
         }
+        const savedActive = localStorage.getItem(userActiveKey);
+        setActiveSetId(prev => {
+          if (prev && parsed.some(s => s.id === prev)) return prev;
+          if (savedActive && parsed.some(s => s.id === savedActive)) return savedActive;
+          return parsed[0]?.id || '';
+        });
       } else {
         setSets([]);
         setActiveSetId('');
@@ -455,7 +482,7 @@ export function useAppStore() {
     sets,
     activeSet,
     activeSetId,
-    setActiveSetId,
+    setActiveSetId: selectActiveSetId,
     updateWordSet,
     addWordSet,
     deleteWordSet,
