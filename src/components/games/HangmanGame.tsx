@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
+import { shuffleArray } from '../../utils/shuffle';
 import type { WordItem } from '../../types';
 import { speakWord } from '../../services/speech';
 import { Volume2, Heart } from 'lucide-react';
@@ -28,7 +29,7 @@ export const HangmanGame: React.FC<HangmanGameProps> = ({
       const clean = w.w.trim().replace(/\s/g, '');
       return clean.length >= 3 && clean.length <= 10 && w.tr;
     });
-    const shuffled = [...valid].sort(() => Math.random() - 0.5).slice(0, 6);
+    const shuffled = shuffleArray([...valid]).slice(0, 6);
     setQuestions(shuffled);
   }, [words]);
 

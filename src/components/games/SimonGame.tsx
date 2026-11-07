@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
+import { shuffleArray } from '../../utils/shuffle';
 import type { WordItem } from '../../types';
 import { sounds } from '../../services/soundEffects';
 import { BrainCircuit } from 'lucide-react';
@@ -18,7 +19,7 @@ export const SimonGame: React.FC<SimonGameProps> = ({
 }) => {
   // Pool of up to 6 words
   const pool = React.useMemo(() => {
-    return [...words].sort(() => Math.random() - 0.5).slice(0, 6);
+    return shuffleArray([...words]).slice(0, 6);
   }, [words]);
 
   const [sequence, setSequence] = useState<WordItem[]>([]);

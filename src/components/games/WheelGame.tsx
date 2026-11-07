@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
+import { shuffleArray } from '../../utils/shuffle';
 import type { WordItem } from '../../types';
 import { sounds } from '../../services/soundEffects';
 import { speech } from '../../services/speech';
@@ -129,8 +130,8 @@ export const WheelGame: React.FC<WheelGameProps> = ({
     const otherTrs = words
       .filter(w => w.tr && w.tr !== correctTr)
       .map(w => w.tr as string);
-    const distractors = [...new Set(otherTrs)].sort(() => Math.random() - 0.5).slice(0, 3);
-    const allOpts = [correctTr, ...distractors].sort(() => Math.random() - 0.5);
+    const distractors = shuffleArray([...new Set(otherTrs)]).slice(0, 3);
+    const allOpts = shuffleArray([correctTr, ...distractors]);
     setOptions(allOpts);
 
     sounds.playPop();

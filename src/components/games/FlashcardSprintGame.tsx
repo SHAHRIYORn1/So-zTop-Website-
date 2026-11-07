@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
+import { shuffleArray } from '../../utils/shuffle';
 import type { WordItem } from '../../types';
 import { sounds } from '../../services/soundEffects';
 import { speech } from '../../services/speech';
@@ -15,7 +16,7 @@ export const FlashcardSprintGame: React.FC<FlashcardSprintGameProps> = ({
   onFinish,
   onUpdateProgress,
 }) => {
-  const [shuffled] = useState<WordItem[]>(() => [...words].sort(() => Math.random() - 0.5));
+  const [shuffled] = useState<WordItem[]>(() => shuffleArray([...words]));
   const total = shuffled.length;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);

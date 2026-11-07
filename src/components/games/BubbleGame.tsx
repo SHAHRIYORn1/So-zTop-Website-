@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { shuffleArray } from '../../utils/shuffle';
 import type { WordItem } from '../../types';
 import { sounds } from '../../services/soundEffects';
 import { speech } from '../../services/speech';
@@ -34,7 +35,7 @@ export const BubbleGame: React.FC<BubbleGameProps> = ({
   onFinish,
   onUpdateProgress,
 }) => {
-  const [shuffled] = useState<WordItem[]>(() => [...words].sort(() => Math.random() - 0.5));
+  const [shuffled] = useState<WordItem[]>(() => shuffleArray([...words]));
   const total = shuffled.length;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -53,12 +54,12 @@ export const BubbleGame: React.FC<BubbleGameProps> = ({
 
     const correctText = currentWord.tr || '';
     const otherWords = words.filter(w => w.tr && w.tr !== correctText);
-    const distractorPool = [...otherWords].sort(() => Math.random() - 0.5).slice(0, 4);
+    const distractorPool = shuffleArray([...otherWords]).slice(0, 4);
 
-    const rawOptions = [
+    const rawOptions = shuffleArray([
       { text: correctText, isCorrect: true },
       ...distractorPool.map(w => ({ text: w.tr || '', isCorrect: false })),
-    ].sort(() => Math.random() - 0.5);
+    ]);
 
     const newBubbles: BubbleItem[] = rawOptions.map((opt, i) => ({
       id: i,

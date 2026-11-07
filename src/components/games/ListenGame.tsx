@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { shuffleArray } from '../../utils/shuffle';
 import type { WordItem } from '../../types';
 import { sounds } from '../../services/soundEffects';
 import { speech } from '../../services/speech';
@@ -15,7 +16,7 @@ export const ListenGame: React.FC<ListenGameProps> = ({
   onFinish,
   onUpdateProgress,
 }) => {
-  const [shuffled] = useState<WordItem[]>(() => [...words].sort(() => Math.random() - 0.5));
+  const [shuffled] = useState<WordItem[]>(() => shuffleArray([...words]));
   const total = shuffled.length;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -34,8 +35,8 @@ export const ListenGame: React.FC<ListenGameProps> = ({
     // Create 4 word options
     const correct = currentWord.w;
     const others = words.filter(w => w.w !== correct);
-    const dist = [...others].sort(() => Math.random() - 0.5).slice(0, 3);
-    const opts = [correct, ...dist.map(w => w.w)].sort(() => Math.random() - 0.5);
+    const dist = shuffleArray([...others]).slice(0, 3);
+    const opts = shuffleArray([correct, ...dist.map(w => w.w)]);
 
     setOptions(opts);
     setSelectedOpt(null);

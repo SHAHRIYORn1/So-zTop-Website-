@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
+import { shuffleArray } from '../../utils/shuffle';
 import type { WordItem } from '../../types';
 import { speakWord } from '../../services/speech';
 import { sounds } from '../../services/soundEffects';
@@ -29,7 +30,7 @@ export const TrueFalseGame: React.FC<TrueFalseGameProps> = ({
 
   useEffect(() => {
     const valid = words.filter(w => w.tr && w.tr.trim());
-    const shuffled = [...valid].sort(() => Math.random() - 0.5);
+    const shuffled = shuffleArray([...valid]);
     const count = Math.min(10, shuffled.length);
 
     const qs: TFQuestion[] = shuffled.slice(0, count).map(item => {

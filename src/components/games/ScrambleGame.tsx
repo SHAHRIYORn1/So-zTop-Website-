@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { shuffleArray } from '../../utils/shuffle';
 import type { WordItem } from '../../types';
 import { speakWord } from '../../services/speech';
 import { Volume2, RotateCcw } from 'lucide-react';
@@ -30,7 +31,7 @@ export const ScrambleGame: React.FC<ScrambleGameProps> = ({
 
   useEffect(() => {
     const valid = words.filter(w => w.w.trim().length >= 3 && w.w.trim().length <= 10);
-    const shuffled = [...valid].sort(() => Math.random() - 0.5).slice(0, 8);
+    const shuffled = shuffleArray([...valid]).slice(0, 8);
     setQuestions(shuffled);
   }, [words]);
 
@@ -40,9 +41,7 @@ export const ScrambleGame: React.FC<ScrambleGameProps> = ({
     if (questions.length > 0 && currentWord) {
       onUpdateProgress(currentIndex, questions.length);
       const chars = currentWord.w.toUpperCase().replace(/\s/g, '').split('');
-      const tiles = chars
-        .map((char, i) => ({ id: i, char }))
-        .sort(() => Math.random() - 0.5);
+      const tiles = shuffleArray(chars.map((char, i) => ({ id: i, char })));
 
       setAvailableTiles(tiles);
       setSelectedTiles([]);
@@ -108,9 +107,7 @@ export const ScrambleGame: React.FC<ScrambleGameProps> = ({
   const handleReset = () => {
     if (!currentWord) return;
     const chars = currentWord.w.toUpperCase().replace(/\s/g, '').split('');
-    const tiles = chars
-      .map((char, i) => ({ id: i, char }))
-      .sort(() => Math.random() - 0.5);
+    const tiles = shuffleArray(chars.map((char, i) => ({ id: i, char })));
     setAvailableTiles(tiles);
     setSelectedTiles([]);
   };

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
+import { shuffleArray } from '../../utils/shuffle';
 import type { WordItem } from '../../types';
 import { speakWord } from '../../services/speech';
 
@@ -29,7 +30,7 @@ export const MemoryGame: React.FC<MemoryGameProps> = ({
 
   useEffect(() => {
     const valid = words.filter(w => w.tr && w.tr.trim());
-    const subset = [...valid].sort(() => Math.random() - 0.5).slice(0, 6);
+    const subset = shuffleArray([...valid]).slice(0, 6);
     setTotalPairs(subset.length);
 
     let cardId = 0;
@@ -50,7 +51,7 @@ export const MemoryGame: React.FC<MemoryGameProps> = ({
       });
     });
 
-    setCards(generated.sort(() => Math.random() - 0.5));
+    setCards(shuffleArray(generated));
   }, [words]);
 
   useEffect(() => {

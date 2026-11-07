@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
+import { shuffleArray } from '../../utils/shuffle';
 import type { WordItem } from '../../types';
 import { sounds } from '../../services/soundEffects';
 import { speech } from '../../services/speech';
@@ -17,7 +18,7 @@ export const SpotGame: React.FC<SpotGameProps> = ({
 }) => {
   // Only words with at least 3 letters
   const validWords = words.filter(w => (w.tr || w.w).length >= 3);
-  const [shuffled] = useState<WordItem[]>(() => [...validWords].sort(() => Math.random() - 0.5));
+  const [shuffled] = useState<WordItem[]>(() => shuffleArray([...validWords]));
   const total = shuffled.length;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);

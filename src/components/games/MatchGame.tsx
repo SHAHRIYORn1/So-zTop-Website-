@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { shuffleArray } from '../../utils/shuffle';
 import type { WordItem } from '../../types';
 import { speakWord } from '../../services/speech';
 
@@ -31,23 +32,23 @@ export const MatchGame: React.FC<MatchGameProps> = ({
 
   useEffect(() => {
     const valid = words.filter(w => w.tr && w.tr.trim());
-    const subset = [...valid].sort(() => Math.random() - 0.5).slice(0, 6);
+    const subset = shuffleArray([...valid]).slice(0, 6);
     setTotalPairs(subset.length);
 
-    const left: MatchItem[] = subset.map((item, idx) => ({
+    const left: MatchItem[] = shuffleArray(subset.map((item, idx) => ({
       id: `w-${idx}`,
       text: item.w,
       pairId: idx,
       type: 'word' as const,
       lg: item.lg || 'en',
-    })).sort(() => Math.random() - 0.5);
+    })));
 
-    const right: MatchItem[] = subset.map((item, idx) => ({
+    const right: MatchItem[] = shuffleArray(subset.map((item, idx) => ({
       id: `tr-${idx}`,
       text: item.tr!,
       pairId: idx,
       type: 'translation' as const,
-    })).sort(() => Math.random() - 0.5);
+    })));
 
     setLeftItems(left);
     setRightItems(right);

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
+import { shuffleArray } from '../../utils/shuffle';
 import type { WordItem } from '../../types';
 import { speakWord } from '../../services/speech';
 import { sounds } from '../../services/soundEffects';
@@ -31,17 +32,15 @@ export const QuizGame: React.FC<QuizGameProps> = ({
   // Prepare questions
   useEffect(() => {
     const valid = words.filter(w => w.tr && w.tr.trim());
-    const shuffled = [...valid].sort(() => Math.random() - 0.5);
+    const shuffled = shuffleArray([...valid]);
     const roundCount = Math.min(10, shuffled.length);
 
     const generated: Question[] = shuffled.slice(0, roundCount).map(item => {
       const wrongPool = valid
         .filter(w => w.tr !== item.tr)
-        .map(w => w.tr!)
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 3);
+        .map(w => w.tr!);
 
-      const allOptions = [...wrongPool, item.tr!].sort(() => Math.random() - 0.5);
+      const allOptions = shuffleArray([...wrongPool, item.tr!]);
       return {
         word: item,
         options: allOptions,

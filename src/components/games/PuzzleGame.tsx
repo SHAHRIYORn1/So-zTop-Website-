@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
+import { shuffleArray } from '../../utils/shuffle';
 import type { WordItem } from '../../types';
 import { sounds } from '../../services/soundEffects';
 import { speech } from '../../services/speech';
@@ -21,7 +22,7 @@ export const PuzzleGame: React.FC<PuzzleGameProps> = ({
   onFinish,
   onUpdateProgress,
 }) => {
-  const [shuffledWords] = useState<WordItem[]>(() => [...words].sort(() => Math.random() - 0.5));
+  const [shuffledWords] = useState<WordItem[]>(() => shuffleArray([...words]));
   const total = shuffledWords.length;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -72,7 +73,7 @@ export const PuzzleGame: React.FC<PuzzleGameProps> = ({
 
     const rawPieces = splitIntoPieces(currentWord.w);
     // Shuffle available pieces
-    setPieces([...rawPieces].sort(() => Math.random() - 0.5));
+    setPieces(shuffleArray([...rawPieces]));
     setSelectedPieces([]);
     setStatus('idle');
     setMistakes(0);
@@ -116,7 +117,7 @@ export const PuzzleGame: React.FC<PuzzleGameProps> = ({
           setTimeout(() => {
             // Reset current word pieces
             const rawPieces = splitIntoPieces(currentWord.w);
-            setPieces([...rawPieces].sort(() => Math.random() - 0.5));
+            setPieces(shuffleArray([...rawPieces]));
             setSelectedPieces([]);
             setStatus('idle');
           }, 1200);

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
+import { shuffleArray } from '../../utils/shuffle';
 import type { WordItem } from '../../types';
 import { sounds } from '../../services/soundEffects';
 import { speech } from '../../services/speech';
@@ -21,7 +22,7 @@ export const DragLetterGame: React.FC<DragLetterGameProps> = ({
   onFinish,
   onUpdateProgress,
 }) => {
-  const [shuffledWords] = useState<WordItem[]>(() => [...words].sort(() => Math.random() - 0.5));
+  const [shuffledWords] = useState<WordItem[]>(() => shuffleArray([...words]));
   const total = shuffledWords.length;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -49,7 +50,7 @@ export const DragLetterGame: React.FC<DragLetterGameProps> = ({
 
     setSlots(new Array(letters.length).fill(null));
     // Shuffle pool
-    setPool([...letters].sort(() => Math.random() - 0.5));
+    setPool(shuffleArray([...letters]));
     setStatus('idle');
     setMistakes(0);
   }, [currentIndex, currentWord]);
@@ -93,7 +94,7 @@ export const DragLetterGame: React.FC<DragLetterGameProps> = ({
       originalIndex: idx,
     }));
     setSlots(new Array(letters.length).fill(null));
-    setPool([...letters].sort(() => Math.random() - 0.5));
+    setPool(shuffleArray([...letters]));
   };
 
   // Drag and Drop handlers

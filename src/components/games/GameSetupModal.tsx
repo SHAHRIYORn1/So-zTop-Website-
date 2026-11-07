@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react';
+﻿import React, { useState, useMemo } from 'react';
+import { shuffleArray } from '../../utils/shuffle';
 import type { WordSet, WordItem, GameModeId } from '../../types';
 import { GAME_MODES } from '../../data/gameModes';
 import { Play, CheckSquare, Square, X, Hash } from 'lucide-react';
@@ -84,7 +85,7 @@ export const GameSetupModal: React.FC<GameSetupModalProps> = ({
       finalWords = availableWords.filter(w => pickedWords.has(w.w.toLowerCase()));
     } else {
       // Shuffle available words and take wordCount
-      const shuffled = [...availableWords].sort(() => Math.random() - 0.5);
+      const shuffled = shuffleArray([...availableWords]);
       finalWords = shuffled.slice(0, wordCount === 0 ? totalAvailable : wordCount);
     }
 

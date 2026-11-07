@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { shuffleArray } from '../../utils/shuffle';
 import type { WordItem } from '../../types';
 import { sounds } from '../../services/soundEffects';
 import { speech } from '../../services/speech';
@@ -28,7 +29,7 @@ export const ClozeGame: React.FC<ClozeGameProps> = ({
   onFinish,
   onUpdateProgress,
 }) => {
-  const [shuffled] = useState<WordItem[]>(() => [...words].sort(() => Math.random() - 0.5));
+  const [shuffled] = useState<WordItem[]>(() => shuffleArray([...words]));
   const total = shuffled.length;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -54,7 +55,7 @@ export const ClozeGame: React.FC<ClozeGameProps> = ({
 
     // Pick nicely spaced indices for holes
     const eligibleIndices = chars.map((_, i) => i).filter(i => chars[i] !== ' ');
-    const shuffledIndices = [...eligibleIndices].sort(() => Math.random() - 0.5);
+    const shuffledIndices = shuffleArray([...eligibleIndices]);
 
     for (let i = 0; i < Math.min(holeCount, shuffledIndices.length); i++) {
       holeIndices.add(shuffledIndices[i]);
@@ -82,8 +83,7 @@ export const ClozeGame: React.FC<ClozeGameProps> = ({
       }
     }
 
-    const allPlugs: LetterPlug[] = [...missingLetters, ...distractors]
-      .sort(() => Math.random() - 0.5)
+    const allPlugs: LetterPlug[] = shuffleArray([...missingLetters, ...distractors])
       .map((char, i) => ({
         id: `${char}-${i}-${Date.now()}`,
         char,

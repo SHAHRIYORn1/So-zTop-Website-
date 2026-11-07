@@ -72,8 +72,12 @@ export const api = {
     if (!token) return null;
 
     try {
-      const res = await fetch(`${API_BASE}/api/auth/me`, {
-        headers: { Authorization: `Bearer ${token}` },
+      const res = await fetch(`${API_BASE}/api/auth/me?_t=${Date.now()}`, {
+        cache: 'no-store',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Cache-Control': 'no-cache',
+        },
       });
       if (!res.ok) return null;
       return await res.json();
@@ -103,8 +107,12 @@ export const api = {
     if (!token) return [];
 
     try {
-      const res = await fetch(`${API_BASE}/api/sets`, {
-        headers: { Authorization: `Bearer ${token}` },
+      const res = await fetch(`${API_BASE}/api/sets?_t=${Date.now()}`, {
+        cache: 'no-store',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Cache-Control': 'no-cache',
+        },
       });
       if (!res.ok) return [];
       const data = await res.json();

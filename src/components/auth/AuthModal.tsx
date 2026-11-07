@@ -54,6 +54,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         if (!username.trim() || !password || !fullName.trim()) {
           throw new Error("Barcha maydonlarni to'ldiring");
         }
+        if (password.length < 8) {
+          throw new Error("Parol kamida 8 ta belgidan iborat bo'lishi kerak");
+        }
         // Register: NO local fallback — backend must accept, else show real error
         const res = await api.register(username, password, fullName, selectedAvatar);
         sounds.playWin();
