@@ -13,9 +13,9 @@ interface HeaderProps {
   onToggleTheme: () => void;
   soundEnabled: boolean;
   onToggleSound: () => void;
-  currentView: 'home' | 'editor' | 'achievements' | 'game' | 'profile';
-  onNavigate: (view: 'home' | 'editor' | 'achievements' | 'profile') => void;
-  onOpenLibrary: () => void;
+  currentView: 'home' | 'editor' | 'templates' | 'achievements' | 'game' | 'profile';
+  onNavigate: (view: 'home' | 'editor' | 'templates' | 'achievements' | 'profile') => void;
+  onOpenLibrary?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -31,7 +31,6 @@ export const Header: React.FC<HeaderProps> = ({
   onToggleSound,
   currentView,
   onNavigate,
-  onOpenLibrary,
 }) => {
   return (
     <header className="py-2 sm:py-3.5 px-2.5 sm:px-4 border-b border-slate-200 dark:border-slate-800 transition-colors w-full">
@@ -75,11 +74,15 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
 
             <button
-              onClick={onOpenLibrary}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-white/40 dark:hover:bg-slate-700/40"
+              onClick={() => onNavigate('templates')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                currentView === 'templates'
+                  ? 'bg-indigo-600 text-white shadow-xs'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-white/40 dark:hover:bg-slate-700/40'
+              }`}
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-              <span>Shablonlar</span>
+              <span>Andozalar</span>
             </button>
 
             <button
@@ -188,11 +191,15 @@ export const Header: React.FC<HeaderProps> = ({
         </button>
 
         <button
-          onClick={onOpenLibrary}
-          className="flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-white/40 dark:hover:bg-slate-700/40"
+          onClick={() => onNavigate('templates')}
+          className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer ${
+            currentView === 'templates'
+              ? 'bg-indigo-600 text-white shadow-xs'
+              : 'text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400'
+          }`}
         >
           <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-          <span className="truncate">Shablonlar</span>
+          <span className="truncate">Andozalar</span>
         </button>
 
         <button

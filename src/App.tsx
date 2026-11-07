@@ -7,6 +7,7 @@ import { AchievementsView } from './components/achievements/AchievementsView';
 import { GameContainer } from './components/games/GameContainer';
 import { GameSetupModal } from './components/games/GameSetupModal';
 import { PresetLibraryModal } from './components/library/PresetLibraryModal';
+import { PresetLibraryView } from './components/library/PresetLibraryView';
 import { LandingPage } from './components/landing/LandingPage';
 import { AuthModal } from './components/auth/AuthModal';
 import { ProfileView } from './components/profile/ProfileView';
@@ -48,7 +49,7 @@ export function App() {
     }
   });
 
-  const [currentView, setCurrentView] = useState<'home' | 'editor' | 'achievements' | 'game' | 'profile'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'editor' | 'templates' | 'achievements' | 'game' | 'profile'>('home');
   const [activeGameMode, setActiveGameMode] = useState<GameModeId | null>(null);
   const [setupModeId, setSetupModeId] = useState<GameModeId | '?' | null>(null);
   const [filteredGameWords, setFilteredGameWords] = useState<WordItem[] | null>(null);
@@ -136,7 +137,7 @@ export function App() {
     // Toplamsiz o'yin o'ynamoqchi bo'lsa xabar chiqarish va to'plam qo'shishga yo'naltirish
     if (sets.length === 0) {
       addToast("O'yin o'ynash uchun avval to'plam qo'shing!", 'error');
-      setIsLibraryOpen(true);
+      setCurrentView('templates');
       return;
     }
     const validWords = activeSet.words.filter(w => w.w.trim() && w.tr?.trim());
@@ -230,7 +231,7 @@ export function App() {
             setCurrentView(view);
             setActiveGameMode(null);
           }}
-          onOpenLibrary={() => setIsLibraryOpen(true)}
+          onOpenLibrary={() => setCurrentView('templates')}
         />
 
         {/* Dynamic Main View */}
@@ -242,7 +243,15 @@ export function App() {
               onSelectSet={setActiveSetId}
               onStartGame={handleStartGameSetup}
               onOpenEditor={() => setCurrentView('editor')}
-              onOpenLibrary={() => setIsLibraryOpen(true)}
+              onOpenLibrary={() => setCurrentView('templates')}
+            />
+          )}
+
+          {currentView === 'templates' && (
+            <PresetLibraryView
+              onPlayDirectly={handlePlayDirectly}
+              onAddToMySets={handleAddToMySets}
+              onBack={() => setCurrentView('home')}
             />
           )}
 
@@ -258,7 +267,7 @@ export function App() {
               }}
               onDeleteSet={handleDeleteWordSet}
               onBack={() => setCurrentView('home')}
-              onOpenLibrary={() => setIsLibraryOpen(true)}
+              onOpenLibrary={() => setCurrentView('templates')}
             />
           )}
 

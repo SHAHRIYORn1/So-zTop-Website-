@@ -93,10 +93,10 @@ export const PresetLibraryModal: React.FC<PresetLibraryModalProps> = ({
               <button
                 onClick={() => setActiveTopic(null)}
                 className="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer flex-none"
-                title="Barcha shablonlarga qaytish"
+                title="Barcha andozalarga qaytish"
               >
                 <ArrowLeft className="w-4 h-4 text-indigo-500" />
-                <span className="hidden xs:inline">Shablonlar</span>
+                <span className="hidden xs:inline">Andozalar</span>
               </button>
 
               <div className="min-w-0">
@@ -117,7 +117,7 @@ export const PresetLibraryModal: React.FC<PresetLibraryModalProps> = ({
               </div>
               <div>
                 <h2 className="text-base sm:text-xl font-black text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-                  <span>Tayyor shablonlar</span>
+                  <span>Tayyor andozalar</span>
                   <Sparkles className="w-4 h-4 text-amber-500" />
                 </h2>
                 <p className="text-[11px] sm:text-xs text-slate-500">
@@ -216,7 +216,7 @@ export const PresetLibraryModal: React.FC<PresetLibraryModalProps> = ({
                     setIsLangMenuOpen(false);
                   }}
                   className="flex items-center gap-1.5 px-3 py-1.5 sm:py-2 text-xs font-bold text-slate-800 dark:text-slate-100 cursor-pointer"
-                  title="Mavzu / Shablon turini tanlash"
+                  title="Mavzu / Andoza turini tanlash"
                 >
                   <span className="text-sm">{CATEGORY_ICONS[selectedCategory] || '🎯'}</span>
                   <span className="max-w-[120px] xs:max-w-[160px] sm:max-w-[220px] truncate font-extrabold">
@@ -251,7 +251,7 @@ export const PresetLibraryModal: React.FC<PresetLibraryModalProps> = ({
                   <div className="fixed inset-0 z-30" onClick={() => setIsCatMenuOpen(false)} />
                   <div className="absolute top-full right-0 mt-1.5 w-64 max-h-72 overflow-y-auto rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xl py-1.5 z-40 animate-pop">
                     <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                      Mavzu / Shablon turi
+                      Mavzu / Andoza turi
                     </div>
                     {categories.map(cat => {
                       const isSelected = selectedCategory === cat;
