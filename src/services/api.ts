@@ -14,6 +14,21 @@ export interface AuthUser {
   profile_image?: string | null;
 }
 
+/**
+ * Render free tier uyqu holatidan chiqarish uchun ping.
+ * Agar server 10 soniyada javob bermasa — davom etaveradi (timeout'ni kutmaydi).
+ */
+async function wakeUpServer(): Promise<void> {
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 10_000);
+    await fetch(`${API_BASE}/health`, { signal: controller.signal, cache: 'no-store' });
+    clearTimeout(timer);
+  } catch {
+    // uyg'otishda xato bo'lsa ham asl so'rovga o'tamiz
+  }
+}
+
 export const api = {
   getToken(): string | null {
     return localStorage.getItem('soztop_token');
@@ -28,6 +43,9 @@ export const api = {
   },
 
   async register(username: string, password: string, fullName: string, avatar = '🦁'): Promise<{ success: boolean; token: string; user: AuthUser }> {
+    // Server uyg'otish (Render free tier cold start)
+    await wakeUpServer();
+
     let res: Response;
     try {
       res = await fetch(`${API_BASE}/api/auth/register`, {
@@ -36,7 +54,6 @@ export const api = {
         body: JSON.stringify({ username, password, full_name: fullName, avatar }),
       });
     } catch {
-      // Truly unreachable (no network, server down, CORS blocked)
       throw new Error("Server bilan aloqa o'rnatib bo'lmadi. Internetni tekshiring.");
     }
 
@@ -48,6 +65,9 @@ export const api = {
   },
 
   async login(username: string, password: string): Promise<{ success: boolean; token: string; user: AuthUser }> {
+    // Server uyg'otish (Render free tier cold start)
+    await wakeUpServer();
+
     let res: Response;
     try {
       res = await fetch(`${API_BASE}/api/auth/login`, {
@@ -56,7 +76,6 @@ export const api = {
         body: JSON.stringify({ username, password }),
       });
     } catch {
-      // Truly unreachable
       throw new Error("Server bilan aloqa o'rnatib bo'lmadi. Internetni tekshiring.");
     }
 
@@ -98,7 +117,7 @@ export const api = {
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.detail || 'Profilni yangilab bo‘lmadi');
+    if (!res.ok) throw new Error(data.detail || "Profilni yangilab bo'lmadi");
     return data.user;
   },
 

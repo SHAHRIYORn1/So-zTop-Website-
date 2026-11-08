@@ -41,12 +41,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [waking, setWaking] = useState(false); // Render cold-start indicator
 
   React.useEffect(() => {
     if (isOpen) {
       setTab(initialTab);
       setRegStep(1);
       setError(null);
+      setWaking(false);
     }
   }, [isOpen, initialTab]);
 
@@ -102,6 +104,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     if (e) e.preventDefault();
     setError(null);
     setLoading(true);
+    setWaking(true); // Show "server uyg'onmoqda" hint
 
     try {
       if (tab === 'login') {
@@ -109,12 +112,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           throw new Error('Username va parolni kiriting');
         }
         const res = await api.login(username.trim().toLowerCase(), password);
+        setWaking(false);
         sounds.playWin();
         onAuthSuccess(res.user);
         onClose();
       } else {
         const cleanUsername = username.trim().toLowerCase();
         const res = await api.register(cleanUsername, password, fullName.trim(), selectedAvatar);
+        setWaking(false);
 
         // If user picked a custom photo, update profile image right away
         if (customPhoto) {
@@ -129,6 +134,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         onClose();
       }
     } catch (err: any) {
+      setWaking(false);
       setError(err.message || 'Xatolik yuz berdi');
       sounds.playWrong();
     } finally {
@@ -211,6 +217,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </div>
         )}
 
+        {/* Server waking up notice */}
+        {waking && (
+          <div className="mb-4 p-3 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-xl text-xs text-amber-700 dark:text-amber-300 flex items-center gap-2">
+            <span className="animate-spin text-base">⚙️</span>
+            <span>Server uyg'onmoqda, biroz kuting… (10–30 soniya)</span>
+          </div>
+        )}
+
         {/* ─── TAB 1: LOGIN ─────────────────────────────────────────────── */}
         {tab === 'login' && (
           <form onSubmit={handleFinalSubmit} className="space-y-4">
@@ -254,7 +268,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               className="w-full py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 active:scale-98 text-white font-extrabold text-sm shadow-lg shadow-indigo-600/30 transition-all cursor-pointer mt-2 flex items-center justify-center gap-2"
             >
               <LogIn className="w-4 h-4" />
-              <span>{loading ? "Kirilmoqda…" : "Hisobga kirish"}</span>
+              <span>{loading ? (waking ? 'Server uyg\'onmoqda…' : 'Kirilmoqda…') : 'Hisobga kirish'}</span>
             </button>
           </form>
         )}
@@ -407,7 +421,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 className="flex-1 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 active:scale-98 text-white font-extrabold text-sm shadow-lg shadow-indigo-600/30 transition-all cursor-pointer flex items-center justify-center gap-2"
               >
                 <Check className="w-4 h-4" />
-                <span>{loading ? "Ochilmoqda…" : "Hisobni ochish va boshlash"}</span>
+                <span>{loading ? (waking ? 'Server uyg\'onmoqda…' : 'Ochilmoqda…') : 'Hisobni ochish va boshlash'}</span>
               </button>
             </div>
           </div>
