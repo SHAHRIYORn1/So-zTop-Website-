@@ -242,10 +242,8 @@ export function App() {
               activeSet={activeSet}
               allSets={sets}
               onSelectSet={setActiveSetId}
-              onStartGame={handleStartGameSetup}
               onOpenEditor={() => setCurrentView('editor')}
               onOpenLibrary={() => setCurrentView('templates')}
-              onOpenGames={() => setCurrentView('games')}
             />
           )}
 

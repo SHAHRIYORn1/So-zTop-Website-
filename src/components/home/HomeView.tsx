@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import type { WordSet, GameModeId } from '../../types';
+import type { WordSet } from '../../types';
 import { WordRack } from './WordRack';
 import {
-  Shuffle,
   BookPlus,
   Sparkles,
   ChevronDown,
   Check,
-  Gamepad2,
   FolderOpen,
   Plus,
 } from 'lucide-react';
@@ -16,28 +14,19 @@ interface HomeViewProps {
   activeSet: WordSet;
   allSets: WordSet[];
   onSelectSet: (id: string) => void;
-  onStartGame: (modeId: GameModeId | '?') => void;
   onOpenEditor: () => void;
   onOpenLibrary: () => void;
-  onOpenGames: () => void;
 }
 
 export const HomeView: React.FC<HomeViewProps> = ({
   activeSet,
   allSets,
   onSelectSet,
-  onStartGame,
   onOpenEditor,
   onOpenLibrary,
-  onOpenGames,
 }) => {
   const [isSetSwitcherOpen, setIsSetSwitcherOpen] = useState(false);
   const validWords = activeSet?.words ? activeSet.words.filter(w => w.w.trim().length > 0) : [];
-  const canPlay = validWords.length >= 4;
-
-  const handleRandomPlay = () => {
-    onStartGame('?');
-  };
 
   return (
     <div className="space-y-8 pb-12">
@@ -173,27 +162,6 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
               {/* Action buttons */}
               <div className="grid grid-cols-1 sm:flex sm:flex-wrap gap-2.5 pt-1 w-full">
-                {/* Primary: Go to Games */}
-                <button
-                  onClick={onOpenGames}
-                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-black text-sm sm:text-base shadow-lg shadow-indigo-500/25 transition-all cursor-pointer"
-                >
-                  <Gamepad2 className="w-5 h-5" />
-                  <span>O'yinlarni boshlash</span>
-                </button>
-
-                {/* Random Play Quick Button */}
-                {canPlay && (
-                  <button
-                    onClick={handleRandomPlay}
-                    className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl border-2 border-indigo-200 dark:border-indigo-800/80 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 font-bold text-sm transition-all cursor-pointer"
-                    title="Tasodifiy o'yin rejimida o'ynash"
-                  >
-                    <Shuffle className="w-4 h-4" />
-                    <span>Tasodifiy o'yin</span>
-                  </button>
-                )}
-
                 {/* Edit Set */}
                 <button
                   onClick={onOpenEditor}
@@ -283,19 +251,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between pt-4 mt-3 border-t border-slate-100 dark:border-slate-800">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onSelectSet(s.id);
-                          onOpenGames();
-                        }}
-                        className="text-xs font-black text-indigo-600 dark:text-indigo-400 flex items-center gap-1 group-hover:translate-x-0.5 transition-transform cursor-pointer"
-                      >
-                        <Gamepad2 className="w-3.5 h-3.5" />
-                        <span>O'yinlarni o'ynash</span>
-                      </button>
-
+                    <div className="flex items-center justify-end pt-4 mt-3 border-t border-slate-100 dark:border-slate-800">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
